@@ -241,6 +241,42 @@ export class MSSQLStorage implements IStorage {
     this.initializeConnection();
   }
 
+  // Helper function to map order status IDs to readable names
+  private getOrderStatus(statusId: number): string {
+    const statusMap: Record<number, string> = {
+      10: 'Pending',
+      20: 'Processing',
+      25: 'On Hold',
+      30: 'Complete',
+      40: 'Cancelled'
+    };
+    return statusMap[statusId] || `Status ID: ${statusId}`;
+  }
+
+  // Helper function to map shipping status IDs to readable names
+  private getShippingStatus(statusId: number): string {
+    const statusMap: Record<number, string> = {
+      10: 'Not Yet Shipped',
+      20: 'Partially Shipped',
+      25: 'Shipped',
+      30: 'Delivered'
+    };
+    return statusMap[statusId] || `Shipping Status ID: ${statusId}`;
+  }
+
+  // Helper function to map payment status IDs to readable names
+  private getPaymentStatus(statusId: number): string {
+    const statusMap: Record<number, string> = {
+      10: 'Pending',
+      20: 'Authorized',
+      25: 'Paid',
+      30: 'Partially Refunded',
+      35: 'Refunded',
+      40: 'Voided'
+    };
+    return statusMap[statusId] || `Payment Status ID: ${statusId}`;
+  }
+
   private async initializeConnection() {
     try {
       this.pool = new sql.ConnectionPool(mssqlConfig);
@@ -268,8 +304,26 @@ export class MSSQLStorage implements IStorage {
       
       const result = await request.query(`
         SELECT 
-          o.*,
-          c.Id as customer_id,
+          o.Id,
+          o.OrderNumber,
+          o.OrderGuid,
+          o.StoreId,
+          o.CustomerId,
+          o.OrderStatusId,
+          o.ShippingStatusId,
+          o.PaymentStatusId,
+          o.CustomerCurrencyCode,
+          o.CurrencyRate,
+          o.VatNumber,
+          o.OrderSubtotalInclTax,
+          o.OrderSubtotalExclTax,
+          o.OrderSubTotalDiscountInclTax,
+          o.OrderSubTotalDiscountExclTax,
+          o.OrderShippingInclTax,
+          o.OrderShippingExclTax,
+          o.PaymentMethodSystemName,
+          o.CreatedOnUtc as OrderCreatedOnUtc,
+          c.Id as CustomerId_FK,
           c.CustomerGuid,
           c.Username,
           c.Email,
@@ -278,11 +332,14 @@ export class MSSQLStorage implements IStorage {
           c.FullName,
           c.Company,
           c.CustomerNumber,
+          c.CreatedOnUtc as CustomerCreatedOnUtc,
+          c.LastLoginDateUtc,
+          c.LastActivityDateUtc,
           c.Active,
           c.Deleted
         FROM dbo.[Order] o
         INNER JOIN dbo.Customer c ON o.CustomerId = c.Id
-        WHERE (o.Id = @orderId OR o.OrderNumber = @orderId)
+        WHERE (CAST(o.Id AS NVARCHAR) = @orderId OR o.OrderNumber = @orderId)
           AND c.Email = @email
           AND c.Deleted = 0
       `);
@@ -313,9 +370,9 @@ export class MSSQLStorage implements IStorage {
         orderShippingInclTax: orderData.OrderShippingInclTax,
         orderShippingExclTax: orderData.OrderShippingExclTax,
         paymentMethodSystemName: orderData.PaymentMethodSystemName,
-        createdOnUtc: orderData.CreatedOnUtc,
+        createdOnUtc: orderData.OrderCreatedOnUtc,
         customer: {
-          id: orderData.customer_id,
+          id: orderData.CustomerId_FK,
           customerGuid: orderData.CustomerGuid,
           username: orderData.Username,
           email: orderData.Email,
@@ -325,7 +382,7 @@ export class MSSQLStorage implements IStorage {
           fullName: orderData.FullName,
           company: orderData.Company,
           customerNumber: orderData.CustomerNumber,
-          createdOnUtc: orderData.CreatedOnUtc,
+          createdOnUtc: orderData.CustomerCreatedOnUtc,
           lastLoginDateUtc: orderData.LastLoginDateUtc,
           lastActivityDateUtc: orderData.LastActivityDateUtc,
           active: orderData.Active,
@@ -349,11 +406,16 @@ export class MSSQLStorage implements IStorage {
       request.input('orderId', sql.Int, orderId);
       
       const result = await request.query(`
-        SELECT *
+        SELECT 
+          Id,
+          OrderId,
+          Note,
+          DisplayToCustomer,
+          CreatedOnUtc
         FROM dbo.OrderNote
         WHERE OrderId = @orderId
           AND DisplayToCustomer = 1
-        ORDER BY CreatedOnUtc DESC
+        ORDER BY CreatedOnUtc ASC
       `);
 
       return result.recordset.map(record => ({

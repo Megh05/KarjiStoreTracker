@@ -12,8 +12,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json({
       database: {
         configured: isDatabaseConfigured,
-        server: databaseConfig.server || 'Not configured',
-        database: databaseConfig.database,
+        server: mssqlConfig.server || 'Not configured',
+        database: mssqlConfig.database,
         type: isDatabaseConfigured ? 'MSSQL' : 'Mock Data'
       },
       version: "1.0.0",
@@ -43,44 +43,56 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // Get the latest status from order notes
-      const latestNote = order.orderNotes[0]; // Notes are ordered by CreatedOnUtc DESC
-      const currentStatus = latestNote ? latestNote.note : "Order placed";
+      // Map nopCommerce status IDs to readable names
+      const getOrderStatus = (statusId: number): string => {
+        const statusMap: Record<number, string> = {
+          10: 'Pending',
+          20: 'Processing',
+          25: 'On Hold',
+          30: 'Complete',
+          40: 'Cancelled'
+        };
+        return statusMap[statusId] || `Status ID: ${statusId}`;
+      };
+
+      const getShippingStatus = (statusId: number): string => {
+        const statusMap: Record<number, string> = {
+          10: 'Not Yet Shipped',
+          20: 'Partially Shipped',
+          25: 'Shipped',
+          30: 'Delivered'
+        };
+        return statusMap[statusId] || `Shipping Status ID: ${statusId}`;
+      };
+
+      // Get current order status
+      const currentOrderStatus = getOrderStatus(order.orderStatusId);
+      const currentShippingStatus = getShippingStatus(order.shippingStatusId);
       
-      // Create order timeline from notes
-      const timeline = order.orderNotes.reverse().map((note, index) => ({
+      // Create timeline from order notes (these contain the actual progress updates)
+      const timeline = order.orderNotes.map((note, index) => ({
         id: note.id,
         status: note.note,
-        date: note.createdOnUtc,
+        date: note.createdOnUtc.toISOString(),
         completed: true,
         isLatest: index === order.orderNotes.length - 1
       }));
 
-      // Add standard order statuses if not present
-      const standardStatuses = [
-        "Order placed",
-        "Payment confirmed", 
-        "Order processing",
-        "Shipped",
-        "Out for delivery",
-        "Delivered"
-      ];
-
-      const timelineStatuses = timeline.map(t => t.status);
-      const missingStatuses = standardStatuses.filter(status => 
-        !timelineStatuses.some(ts => ts.toLowerCase().includes(status.toLowerCase()))
-      );
-
-      // Add missing future statuses as pending
-      missingStatuses.forEach(status => {
+      // Add current status if no notes exist
+      if (timeline.length === 0) {
         timeline.push({
           id: 0,
-          status,
-          date: null,
-          completed: false,
-          isLatest: false
+          status: `Order ${currentOrderStatus}`,
+          date: order.createdOnUtc.toISOString(),
+          completed: true,
+          isLatest: true
         });
-      });
+      }
+
+      // Get the most relevant current status
+      const currentStatus = timeline.length > 0 
+        ? timeline[timeline.length - 1].status 
+        : currentOrderStatus;
 
       const response = {
         order: {
