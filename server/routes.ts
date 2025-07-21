@@ -94,6 +94,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ? timeline[timeline.length - 1].status 
         : currentOrderStatus;
 
+      // Get the latest order note for latestUpdate
+      const latestNote = order.orderNotes.length > 0 
+        ? order.orderNotes[order.orderNotes.length - 1] 
+        : null;
+
       const response = {
         order: {
           id: order.id,

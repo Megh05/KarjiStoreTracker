@@ -529,5 +529,7 @@ export class MSSQLStorage implements IStorage {
   }
 }
 
-// Export storage instance - using mock data for development
-export const storage = new MockStorage();
+// Export storage instance - switch to real database when configured
+export const storage = isDatabaseConfigured 
+  ? new MSSQLStorage() 
+  : new MockStorage();
