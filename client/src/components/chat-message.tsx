@@ -39,12 +39,8 @@ export default function ChatMessage({
       });
     },
     onError: (error: any) => {
-      const errorMessage = error.message || "Failed to track order. Please try again.";
-      toast({
-        title: "Order Not Found",
-        description: errorMessage,
-        variant: "destructive",
-      });
+      // Show a friendly error message asking user to try again
+      onOptionSelect('order-not-found');
     }
   });
 

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Bot, User, Package, MessageCircle, RotateCcw, Settings } from "lucide-react";
+import { Bot, User, Package, MessageCircle, RotateCcw, Settings, RefreshCw } from "lucide-react";
 import ChatMessage from "@/components/chat-message";
 import OrderTrackingModal from "@/components/order-tracking-modal";
 import ChatInput from "@/components/chat-input";
@@ -90,6 +90,31 @@ export default function Chatbot() {
     return newMessage.id;
   };
 
+  const restartChat = () => {
+    setMessages([]);
+    setCurrentFlow(null);
+    setOrderData(null);
+    setIsModalOpen(false);
+    
+    // Re-initialize with welcome message
+    setTimeout(() => {
+      const welcomeMessage: Message = {
+        id: "welcome",
+        content: "👋 Welcome to KarjiStore! I'm here to help you with:",
+        isBot: true,
+        timestamp: new Date(),
+        type: 'options',
+        options: [
+          { label: "📦 Track my order", value: "track", icon: "📦" },
+          { label: "💬 General inquiry", value: "general", icon: "💬" },
+          { label: "🔄 Returns & refunds", value: "return", icon: "🔄" },
+          { label: "🛠️ Technical support", value: "support", icon: "🛠️" }
+        ]
+      };
+      setMessages([welcomeMessage]);
+    }, 100);
+  };
+
   const addTypingMessage = () => {
     return addMessage("typing", true);
   };
@@ -103,11 +128,14 @@ export default function Chatbot() {
       'track': '📦 Track my order',
       'general': '💬 General inquiry', 
       'return': '🔄 Returns & refunds',
-      'support': '🛠️ Technical support'
+      'support': '🛠️ Technical support',
+      'order-not-found': ''  // No user message for this
     };
 
-    // Add user's selection as a message
-    addMessage(optionLabels[option], false);
+    // Add user's selection as a message (except for order-not-found)
+    if (option !== 'order-not-found') {
+      addMessage(optionLabels[option], false);
+    }
 
     // Show typing indicator
     const typingId = addTypingMessage();
@@ -122,6 +150,17 @@ export default function Chatbot() {
             `Great! I'll help you track your order. Please provide your email address and order ID.`,
             true,
             'form'
+          );
+          break;
+        case 'order-not-found':
+          addMessage(
+            "❌ Sorry, I couldn't find an order with those details. Please check:\n\n• Your email address is correct\n• Your order ID or order number is correct\n\nWould you like to try tracking your order again?", 
+            true, 
+            'options', 
+            [
+              { label: "🔄 Try again", value: "track" },
+              { label: "📞 Contact support", value: "support" }
+            ]
           );
           break;
         case 'general':
@@ -180,22 +219,7 @@ Order Date: ${new Date(trackingData.order.orderDate).toLocaleDateString()}`,
     }, 1000);
   };
 
-  const resetChat = () => {
-    setCurrentFlow(null);
-    setMessages([{
-      id: "welcome",
-      content: "👋 Welcome to KarjiStore! I'm here to help you with:",
-      isBot: true,
-      timestamp: new Date(),
-      type: 'options',
-      options: [
-        { label: "📦 Track my order", value: "track", icon: "📦" },
-        { label: "💬 General inquiry", value: "general", icon: "💬" },
-        { label: "🔄 Returns & refunds", value: "return", icon: "🔄" },
-        { label: "🛠️ Technical support", value: "support", icon: "🛠️" }
-      ]
-    }]);
-  };
+
 
   return (
     <div className="min-h-screen flex flex-col lg:flex-row bg-neutral-50">
@@ -212,10 +236,11 @@ Order Date: ${new Date(trackingData.order.orderDate).toLocaleDateString()}`,
             </div>
           </div>
           <button
-            onClick={resetChat}
+            onClick={restartChat}
             className="p-2 text-neutral-400 hover:text-neutral-600 transition-colors"
+            title="Restart Chat"
           >
-            <RotateCcw className="w-4 h-4" />
+            <RefreshCw className="w-4 h-4" />
           </button>
         </div>
       </div>
@@ -245,11 +270,11 @@ Order Date: ${new Date(trackingData.order.orderDate).toLocaleDateString()}`,
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold text-neutral-800">Quick Actions</h3>
             <button
-              onClick={resetChat}
+              onClick={restartChat}
               className="p-2 text-neutral-400 hover:text-neutral-600 transition-colors"
-              title="Reset Chat"
+              title="Restart Chat"
             >
-              <RotateCcw className="w-4 h-4" />
+              <RefreshCw className="w-4 h-4" />
             </button>
           </div>
           <div className="space-y-3">
