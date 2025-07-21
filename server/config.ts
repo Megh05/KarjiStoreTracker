@@ -1,7 +1,16 @@
 // Database Configuration
-// This file makes it easy to switch between mock data and your real database
+// This file manages both PostgreSQL (Replit) and MSSQL (production) connections
 
-export const databaseConfig = {
+export const postgresConfig = {
+  connectionString: process.env.DATABASE_URL,
+  host: process.env.PGHOST,
+  port: parseInt(process.env.PGPORT || '5432'),
+  user: process.env.PGUSER,
+  password: process.env.PGPASSWORD,
+  database: process.env.PGDATABASE,
+};
+
+export const mssqlConfig = {
   // Your MSSQL database connection settings
   server: process.env.DB_SERVER || '',
   database: process.env.DB_NAME || 'karjistoreDB',
@@ -19,18 +28,17 @@ export const databaseConfig = {
   }
 };
 
-// Check if database is properly configured
-export const isDatabaseConfigured = !!(
-  databaseConfig.server && 
-  databaseConfig.user && 
-  databaseConfig.password
-);
+// Check if databases are configured
+export const isPostgresConfigured = !!(postgresConfig.connectionString || (postgresConfig.host && postgresConfig.user));
+export const isMSSQLConfigured = !!(mssqlConfig.server && mssqlConfig.user && mssqlConfig.password);
 
-export const isProduction = process.env.NODE_ENV === 'production';
+export const isDatabaseConfigured = isPostgresConfigured || isMSSQLConfigured;
+export const databaseType = isPostgresConfigured ? 'PostgreSQL' : isMSSQLConfigured ? 'MSSQL' : 'Mock';
 
-console.log('📊 Database Status:', {
+console.log('Database Status:', {
   configured: isDatabaseConfigured,
-  server: databaseConfig.server || 'Not set',
-  database: databaseConfig.database,
+  type: databaseType,
+  postgres: isPostgresConfigured,
+  mssql: isMSSQLConfigured,
   environment: process.env.NODE_ENV || 'development'
 });
