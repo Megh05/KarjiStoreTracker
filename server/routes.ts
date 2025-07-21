@@ -4,8 +4,22 @@ import { z } from "zod";
 import { fromZodError } from "zod-validation-error";
 import { storage } from "./storage";
 import { orderTrackingSchema, chatMessageSchema } from "@shared/schema";
+import { isDatabaseConfigured, databaseConfig } from "./config";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Database status endpoint
+  app.get("/api/status", (req, res) => {
+    res.json({
+      database: {
+        configured: isDatabaseConfigured,
+        server: databaseConfig.server || 'Not configured',
+        database: databaseConfig.database,
+        type: isDatabaseConfigured ? 'MSSQL' : 'Mock Data'
+      },
+      version: "1.0.0",
+      timestamp: new Date().toISOString()
+    });
+  });
   // Track order endpoint
   app.post("/api/track-order", async (req, res) => {
     try {

@@ -1,21 +1,6 @@
 import sql from 'mssql';
 import { customers, orders, orderNotes, chatMessages, type Customer, type Order, type OrderNote, type ChatMessage, type OrderWithDetails, type InsertChatMessage } from "@shared/schema";
-
-const config = {
-  server: process.env.DB_SERVER || 'localhost',
-  database: process.env.DB_NAME || 'karjistoreDB',
-  user: process.env.DB_USER || 'sa',
-  password: process.env.DB_PASSWORD || '',
-  options: {
-    encrypt: process.env.DB_ENCRYPT === 'true' || false,
-    trustServerCertificate: true,
-  },
-  pool: {
-    max: 10,
-    min: 0,
-    idleTimeoutMillis: 30000
-  }
-};
+import { databaseConfig, isDatabaseConfigured } from "./config";
 
 // Mock data for demonstration
 const mockCustomers: Customer[] = [
@@ -258,11 +243,11 @@ export class MSSQLStorage implements IStorage {
 
   private async initializeConnection() {
     try {
-      this.pool = new sql.ConnectionPool(config);
+      this.pool = new sql.ConnectionPool(databaseConfig);
       await this.pool.connect();
-      console.log('Connected to MSSQL database');
+      console.log('✅ Connected to MSSQL database successfully');
     } catch (error) {
-      console.error('Database connection failed:', error);
+      console.error('❌ Database connection failed:', error);
       throw error;
     }
   }
@@ -482,7 +467,7 @@ export class MSSQLStorage implements IStorage {
   }
 }
 
-// Use MockStorage for development, switch to MSSQLStorage when database is configured
-export const storage = process.env.NODE_ENV === 'production' && process.env.DB_SERVER 
+// Export storage instance based on configuration
+export const storage = isDatabaseConfigured 
   ? new MSSQLStorage() 
   : new MockStorage();
