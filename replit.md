@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is a full-stack web application built with Express.js backend and React frontend, featuring an embeddable customer service chatbot widget with order tracking capabilities. The application is designed to be easily embedded into any website as a simple chat widget. It uses a hybrid architecture that integrates with an existing MSSQL database while being configured for potential PostgreSQL migration through Drizzle ORM.
+This is a full-stack web application built with Express.js backend and React frontend, featuring a customer service chatbot with order tracking capabilities. The application uses a hybrid architecture that integrates with an existing MSSQL database while being configured for potential PostgreSQL migration through Drizzle ORM.
 
 ## User Preferences
 
@@ -41,10 +41,10 @@ Preferred communication style: Simple, everyday language.
 - `GET /api/chat/history/:sessionId` - Chat history retrieval (planned)
 
 #### Frontend Components
-- **Chat Widget**: Embeddable floating chat button and window interface
-- **Chatbot Interface**: Full conversational UI with message history (legacy)
-- **Order Tracking Form**: Inline form within chat for order details
-- **Simple Timeline**: Condensed order status display in chat messages
+- **Chatbot Interface**: Main conversational UI with message history
+- **Order Tracking Modal**: Detailed order status with timeline visualization
+- **Chat Input**: Message composition with keyboard shortcuts
+- **Order Timeline**: Visual progress indicator for order status
 
 ## Data Flow
 
