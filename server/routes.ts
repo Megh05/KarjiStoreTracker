@@ -66,14 +66,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       };
 
       // Get current order status
-      const currentOrderStatus = getOrderStatus(order.orderStatusId);
-      const currentShippingStatus = getShippingStatus(order.shippingStatusId);
+      const currentOrderStatus = getOrderStatus(order.orderStatusId || 10);
+      const currentShippingStatus = getShippingStatus(order.shippingStatusId || 10);
       
       // Create timeline from order notes (these contain the actual progress updates)
       const timeline = order.orderNotes.map((note, index) => ({
         id: note.id,
         status: note.note,
-        date: note.createdOnUtc.toISOString(),
+        date: note.createdOnUtc?.toISOString() || new Date().toISOString(),
         completed: true,
         isLatest: index === order.orderNotes.length - 1
       }));
@@ -83,7 +83,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         timeline.push({
           id: 0,
           status: `Order ${currentOrderStatus}`,
-          date: order.createdOnUtc.toISOString(),
+          date: order.createdOnUtc?.toISOString() || new Date().toISOString(),
           completed: true,
           isLatest: true
         });
@@ -103,7 +103,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         order: {
           id: order.id,
           orderNumber: order.orderNumber,
-          orderDate: order.createdOnUtc,
+          orderDate: order.createdOnUtc || new Date(),
           status: currentStatus,
           customer: {
             name: order.customer.fullName || `${order.customer.firstName} ${order.customer.lastName}`.trim(),
@@ -113,7 +113,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         timeline,
         latestUpdate: latestNote ? {
           status: latestNote.note,
-          date: latestNote.createdOnUtc
+          date: latestNote.createdOnUtc?.toISOString() || new Date().toISOString()
         } : null
       };
 
