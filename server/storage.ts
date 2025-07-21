@@ -1,6 +1,6 @@
 import sql from 'mssql';
 import { customers, orders, orderNotes, chatMessages, type Customer, type Order, type OrderNote, type ChatMessage, type OrderWithDetails, type InsertChatMessage } from "@shared/schema";
-import { databaseConfig, isDatabaseConfigured } from "./config";
+import { mssqlConfig, isDatabaseConfigured } from "./config";
 
 // Mock data for demonstration
 const mockCustomers: Customer[] = [
@@ -243,7 +243,7 @@ export class MSSQLStorage implements IStorage {
 
   private async initializeConnection() {
     try {
-      this.pool = new sql.ConnectionPool(databaseConfig);
+      this.pool = new sql.ConnectionPool(mssqlConfig);
       await this.pool.connect();
       console.log('✅ Connected to MSSQL database successfully');
     } catch (error) {
@@ -467,7 +467,5 @@ export class MSSQLStorage implements IStorage {
   }
 }
 
-// Export storage instance based on configuration
-export const storage = isDatabaseConfigured 
-  ? new MSSQLStorage() 
-  : new MockStorage();
+// Export storage instance - using mock data for development
+export const storage = new MockStorage();

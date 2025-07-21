@@ -4,7 +4,7 @@ import { z } from "zod";
 import { fromZodError } from "zod-validation-error";
 import { storage } from "./storage";
 import { orderTrackingSchema, chatMessageSchema } from "@shared/schema";
-import { isDatabaseConfigured, databaseConfig } from "./config";
+import { isDatabaseConfigured, mssqlConfig, databaseType } from "./config";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Database status endpoint

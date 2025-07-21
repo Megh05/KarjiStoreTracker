@@ -9,12 +9,13 @@ export interface Message {
   content: string;
   isBot: boolean;
   timestamp: Date;
-  type?: 'text' | 'options' | 'form';
+  type?: 'text' | 'options' | 'form' | 'order-result';
   options?: Array<{
     label: string;
     value: string;
     icon?: string;
   }>;
+  orderData?: OrderTrackingData;
 }
 
 export interface OrderTrackingData {
@@ -75,14 +76,15 @@ export default function Chatbot() {
     setMessages([welcomeMessage]);
   }, []);
 
-  const addMessage = (content: string, isBot = true, type: 'text' | 'options' | 'form' = 'text', options?: Message['options']) => {
+  const addMessage = (content: string, isBot = true, type: 'text' | 'options' | 'form' | 'order-result' = 'text', options?: Message['options'], orderData?: OrderTrackingData) => {
     const newMessage: Message = {
       id: `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       content,
       isBot,
       timestamp: new Date(),
       type,
-      options
+      options,
+      orderData
     };
     setMessages(prev => [...prev, newMessage]);
     return newMessage.id;
@@ -143,7 +145,6 @@ Would you like to start a return request?`);
 
   const handleOrderTracking = (trackingData: OrderTrackingData) => {
     setOrderData(trackingData);
-    setIsModalOpen(true);
     
     addMessage(
       `✅ Order found! Here are your order details:
@@ -151,10 +152,11 @@ Would you like to start a return request?`);
 **Order ${trackingData.order.orderNumber}**
 Customer: ${trackingData.order.customer.name}
 Status: ${trackingData.order.status}
-Order Date: ${new Date(trackingData.order.orderDate).toLocaleDateString()}
-
-Click "View Full Details" to see the complete order timeline.`,
-      true
+Order Date: ${new Date(trackingData.order.orderDate).toLocaleDateString()}`,
+      true,
+      'order-result',
+      undefined,
+      trackingData
     );
   };
 

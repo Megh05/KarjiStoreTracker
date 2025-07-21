@@ -1,10 +1,11 @@
-import { Bot, User } from "lucide-react";
+import { Bot, User, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import OrderTimeline from "@/components/order-timeline";
 import type { Message, OrderTrackingData } from "@/pages/chatbot";
 
 interface ChatMessageProps {
@@ -22,6 +23,7 @@ export default function ChatMessage({
 }: ChatMessageProps) {
   const [trackingEmail, setTrackingEmail] = useState("");
   const [trackingOrderId, setTrackingOrderId] = useState("");
+  const [showTimeline, setShowTimeline] = useState(false);
   const { toast } = useToast();
 
   const trackOrderMutation = useMutation({
@@ -150,6 +152,26 @@ export default function ChatMessage({
                     "🔍 Track Order"
                   )}
                 </Button>
+              </div>
+            )}
+
+            {message.type === 'order-result' && message.orderData && (
+              <div className="mt-3">
+                <Button
+                  onClick={() => setShowTimeline(!showTimeline)}
+                  variant="outline"
+                  className="w-full justify-between text-sm font-medium bg-neutral-50 hover:bg-neutral-100 transition-colors"
+                >
+                  <span>📈 View Progress</span>
+                  <ChevronRight className={`w-4 h-4 transition-transform ${showTimeline ? 'rotate-90' : ''}`} />
+                </Button>
+                
+                {showTimeline && (
+                  <div className="mt-4 p-4 bg-neutral-50 rounded-lg">
+                    <h4 className="font-semibold text-neutral-800 mb-3">Order Timeline</h4>
+                    <OrderTimeline timeline={message.orderData.timeline} />
+                  </div>
+                )}
               </div>
             )}
           </div>
