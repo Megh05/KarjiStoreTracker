@@ -9,8 +9,15 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.344.0/lucide.min.css" rel="stylesheet">
 </head>
 <body>
+    <!-- Floating Chat Button -->
+    <div class="chat-toggle-btn" id="chatToggleBtn">
+        <i data-lucide="message-circle" class="icon"></i>
+    </div>
+    
     <div class="app">
-        <div class="chat-container">
+        <!-- Chat Widget Container -->
+        <div class="chat-widget" id="chatWidget">
+            <div class="chat-container">
             <!-- Header -->
             <div class="chat-header">
                 <div class="header-content">
@@ -51,6 +58,7 @@
                     <span class="char-count">0/500</span>
                     <span class="shortcut-hint">Press Enter to send</span>
                 </div>
+            </div>
             </div>
         </div>
 

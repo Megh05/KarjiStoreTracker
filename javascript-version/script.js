@@ -7,6 +7,7 @@ class ChatbotApp {
     this.messages = [];
     this.currentStep = 'welcome';
     this.isLoading = false;
+    this.isWidgetOpen = false;
     
     this.init();
   }
@@ -37,6 +38,8 @@ class ChatbotApp {
     const reloadBtn = document.getElementById('reloadBtn');
     const closeModalBtn = document.getElementById('closeModalBtn');
     const modal = document.getElementById('orderModal');
+    const chatToggleBtn = document.getElementById('chatToggleBtn');
+    const chatWidget = document.getElementById('chatWidget');
 
     // Send message events
     sendBtn.addEventListener('click', () => this.handleSendMessage());
@@ -66,6 +69,19 @@ class ChatbotApp {
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && modal.classList.contains('show')) {
         this.hideModal();
+      }
+    });
+
+    // Chat widget toggle
+    chatToggleBtn.addEventListener('click', () => this.toggleChatWidget());
+    
+    // Close chat widget when clicking outside on mobile
+    document.addEventListener('click', (e) => {
+      if (this.isWidgetOpen && 
+          !chatWidget.contains(e.target) && 
+          !chatToggleBtn.contains(e.target) &&
+          window.innerWidth <= 768) {
+        this.closeChatWidget();
       }
     });
   }
@@ -681,6 +697,42 @@ class ChatbotApp {
   isValidEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
+  }
+
+  // Toggle chat widget open/close
+  toggleChatWidget() {
+    const chatWidget = document.getElementById('chatWidget');
+    const chatToggleBtn = document.getElementById('chatToggleBtn');
+    
+    this.isWidgetOpen = !this.isWidgetOpen;
+    
+    if (this.isWidgetOpen) {
+      chatWidget.classList.add('open');
+      chatToggleBtn.style.transform = 'rotate(180deg)';
+    } else {
+      chatWidget.classList.remove('open');
+      chatToggleBtn.style.transform = 'rotate(0deg)';
+    }
+  }
+
+  // Close chat widget
+  closeChatWidget() {
+    const chatWidget = document.getElementById('chatWidget');
+    const chatToggleBtn = document.getElementById('chatToggleBtn');
+    
+    this.isWidgetOpen = false;
+    chatWidget.classList.remove('open');
+    chatToggleBtn.style.transform = 'rotate(0deg)';
+  }
+
+  // Open chat widget
+  openChatWidget() {
+    const chatWidget = document.getElementById('chatWidget');
+    const chatToggleBtn = document.getElementById('chatToggleBtn');
+    
+    this.isWidgetOpen = true;
+    chatWidget.classList.add('open');
+    chatToggleBtn.style.transform = 'rotate(180deg)';
   }
 }
 

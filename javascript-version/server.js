@@ -6,6 +6,9 @@ const fs = require('fs');
 const path = require('path');
 const url = require('url');
 
+// Load environment variables
+require('dotenv').config();
+
 // Import MSSQL for database connections
 let sql;
 try {

@@ -2,14 +2,14 @@
 
 ## Download the Zip Bundle
 
-**File:** `karjistore-chatbot-javascript-mssql-v2.0.zip` (28KB)
+**File:** `karjistore-chatbot-javascript-mssql-expandable-v3.0.zip` (32KB)
 
 This zip contains the complete JavaScript version of the KarjiStore customer service chatbot with full MSSQL database connectivity.
 
 ## What's Included
 
 ```
-karjistore-chatbot-javascript-mssql-v2.0.zip
+karjistore-chatbot-javascript-mssql-expandable-v3.0.zip
 ├── index.html          # Main chatbot interface
 ├── styles.css          # Complete styling and animations  
 ├── script.js           # Full chatbot functionality
@@ -20,6 +20,7 @@ karjistore-chatbot-javascript-mssql-v2.0.zip
 ├── .env.example        # Database configuration template
 ├── README.md           # Documentation with setup instructions
 ├── MSSQL-SETUP.md      # Complete database setup guide
+├── mssql-test.js       # Database connection testing script
 └── run.html            # Testing interface
 ```
 
@@ -32,8 +33,8 @@ karjistore-chatbot-javascript-mssql-v2.0.zip
 ### Method 2: Command line
 ```bash
 # Extract the zip file
-unzip karjistore-chatbot-javascript-mssql-v2.0.zip
-cd karjistore-chatbot-javascript-mssql-v2.0/
+unzip karjistore-chatbot-javascript-mssql-expandable-v3.0.zip
+cd karjistore-chatbot-javascript-mssql-expandable-v3.0/
 
 # Install dependencies (for MSSQL support)
 npm install
@@ -41,6 +42,9 @@ npm install
 # Configure database (optional - uses mock data if not configured)
 cp .env.example .env
 # Edit .env with your MSSQL server details
+
+# Test database connection (troubleshoot MSSQL issues)
+npm run test-db
 
 # Run with Node.js (recommended for database features)
 node server.js
@@ -71,9 +75,11 @@ Simply open `index.html` directly in your browser (some features may be limited 
 ✅ **MSSQL Server connectivity for real data**
 ✅ **Automatic fallback to mock data if database unavailable**
 ✅ **nopCommerce schema compatibility**
+✅ **Expandable chat widget with floating button**
+✅ **Database connection testing and troubleshooting tools**
 ✅ Environment-based configuration
 ✅ Connection pooling and error handling
-✅ 28KB total bundle size
+✅ 32KB total bundle size
 
 ## Browser Support
 
@@ -105,3 +111,25 @@ Perfect for:
 - Integration into existing websites
 
 The chatbot is designed to always work - it gracefully handles database connection issues by automatically switching to mock data.
+
+## MSSQL Connection Troubleshooting
+
+If your MSSQL database isn't connecting:
+
+1. **Test your connection:**
+   ```bash
+   npm run test-db
+   ```
+
+2. **Check common issues:**
+   - Verify server hostname and credentials in `.env`
+   - Ensure SQL Server allows remote connections
+   - Check firewall settings (port 1433)
+   - Confirm user has database permissions
+
+3. **Try connection settings:**
+   - Set `DB_ENCRYPT=false` for local servers
+   - Set `DB_TRUST_CERT=true` for self-signed certificates
+   - Check if you need VPN connection to server
+
+The test script provides detailed error messages and solutions for common connection problems.
