@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Chatbot - Local Testing</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+            font-size: 1.2em;
+        }
+        
+        .demo-section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 30px 0;
+            border-left: 4px solid #3498db;
+        }
+        
+        .demo-section h3 {
+            color: #2c3e50;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        
+        .credentials {
+            background: #e8f5e8;
+            border-left: 4px solid #27ae60;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+        }
+        
+        .error-demo {
+            background: #ffeaa7;
+            border-left: 4px solid #fdcb6e;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 6px;
+            margin: 10px;
+            font-weight: 500;
+            transition: all 0.2s;
+            text-align: center;
+            min-width: 200px;
+        }
+        
+        .btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .btn-secondary {
+            background: #95a5a6;
+        }
+        
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+        
+        .buttons {
+            text-align: center;
+            margin: 40px 0;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .feature {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .feature h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .tech-stack {
+            background: #f1f2f6;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 30px 0;
+        }
+        
+        .tech-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .tech-item {
+            background: white;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 14px;
+            border: 1px solid #ddd;
+        }
+        
+        .comparison {
+            margin: 30px 0;
+            overflow-x: auto;
+        }
+        
+        .comparison table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .comparison th, .comparison td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .comparison th {
+            background: #3498db;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .comparison tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .status.ready {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status.demo {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        @media (max-width: 600px) {
+            body {
+                padding: 20px 10px;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .btn {
+                display: block;
+                margin: 10px auto;
+                max-width: 300px;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 KarjiStore Chatbot</h1>
+        <div class="subtitle">JavaScript Version - Local Testing Interface</div>
+        
+        <div class="demo-section">
+            <h3>🚀 Ready to Test</h3>
+            <p>This is the plain JavaScript version of the KarjiStore customer service chatbot. It has <strong>identical functionality</strong> to the React version but uses only vanilla HTML, CSS, and JavaScript.</p>
+        </div>
+        
+        <div class="buttons">
+            <a href="index.html" class="btn">Launch JavaScript Chatbot</a>
+            <a href="../" class="btn btn-secondary">View React Version</a>
+        </div>
+        
+        <div class="demo-section">
+            <h3>📝 Demo Data for Testing</h3>
+            
+            <h4>✅ Working Order Examples:</h4>
+            <div class="credentials">
+                <strong>John Doe - Shipped Order:</strong><br>
+                Email: john.doe@example.com<br>
+                Order ID: ORD-2024-001<br>
+                <em>Shows 4-step timeline with FedEx tracking</em>
+            </div>
+            
+            <div class="credentials">
+                <strong>Jane Smith - Out for Delivery:</strong><br>
+                Email: jane.smith@company.com<br>
+                Order ID: ORD-2024-002<br>
+                <em>Shows 5-step timeline with UPS tracking</em>
+            </div>
+            
+            <h4>❌ Error Testing:</h4>
+            <div class="credentials error-demo">
+                <strong>Order Not Found:</strong><br>
+                Email: wrong@email.com<br>
+                Order ID: FAKE-ORDER<br>
+                <em>Shows friendly error with retry options</em>
+            </div>
+        </div>
+        
+        <div class="features">
+            <div class="feature">
+                <h4>🎯 Complete Feature Parity</h4>
+                <p>All functionality from the React version including order tracking, timeline visualization, and error handling</p>
+            </div>
+            
+            <div class="feature">
+                <h4>🚀 Zero Dependencies</h4>
+                <p>Pure vanilla JavaScript with only Lucide icons CDN - no frameworks or build tools needed</p>
+            </div>
+            
+            <div class="feature">
+                <h4>📱 Responsive Design</h4>
+                <p>Works perfectly on desktop, tablet, and mobile devices with modern CSS</p>
+            </div>
+            
+            <div class="feature">
+                <h4>🔌 API Integration</h4>
+                <p>Connects to the same backend endpoints as the React version</p>
+            </div>
+        </div>
+        
+        <div class="tech-stack">
+            <h3>🛠️ Technology Stack</h3>
+            <div class="tech-list">
+                <div class="tech-item">Vanilla JavaScript ES6+</div>
+                <div class="tech-item">Modern CSS Grid & Flexbox</div>
+                <div class="tech-item">CSS Custom Properties</div>
+                <div class="tech-item">Fetch API for HTTP requests</div>
+                <div class="tech-item">Lucide Icons (CDN)</div>
+                <div class="tech-item">Responsive Design</div>
+            </div>
+        </div>
+        
+        <div class="comparison">
+            <h3>📊 React vs JavaScript Comparison</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>React Version</th>
+                        <th>JavaScript Version</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Framework</td>
+                        <td>React + TypeScript</td>
+                        <td>Vanilla JavaScript</td>
+                    </tr>
+                    <tr>
+                        <td>Bundle Size</td>
+                        <td>~500KB+</td>
+                        <td>~50KB</td>
+                    </tr>
+                    <tr>
+                        <td>Dependencies</td>
+                        <td>50+ packages</td>
+                        <td>1 (Lucide CDN)</td>
+                    </tr>
+                    <tr>
+                        <td>Build Process</td>
+                        <td>Vite + bundling</td>
+                        <td>None required</td>
+                    </tr>
+                    <tr>
+                        <td>Functionality</td>
+                        <td><span class="status ready">Complete</span></td>
+                        <td><span class="status ready">Identical</span></td>
+                    </tr>
+                    <tr>
+                        <td>Load Speed</td>
+                        <td>Fast</td>
+                        <td>Faster</td>
+                    </tr>
+                    <tr>
+                        <td>Browser Support</td>
+                        <td>Modern browsers</td>
+                        <td>Chrome 90+, Firefox 88+, Safari 14+</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="demo-section">
+            <h3>🎯 Key Features Demonstrated</h3>
+            <ul>
+                <li><strong>Service Selection:</strong> Track Order, Returns, Account Support, General</li>
+                <li><strong>Order Tracking:</strong> Real-time form validation and API integration</li>
+                <li><strong>Timeline Visualization:</strong> Beautiful progress timeline with animations</li>
+                <li><strong>Error Handling:</strong> Friendly error messages with retry options</li>
+                <li><strong>Responsive UI:</strong> Works on all screen sizes</li>
+                <li><strong>Accessibility:</strong> Keyboard navigation and screen reader support</li>
+                <li><strong>Modern UX:</strong> Smooth animations and loading states</li>
+            </ul>
+        </div>
+        
+        <div class="buttons">
+            <a href="index.html" class="btn">🚀 Start Testing Now</a>
+        </div>
+        
+        <div style="text-align: center; margin-top: 40px; color: #7f8c8d; font-size: 14px;">
+            <p>This implementation proves that complex, modern UI/UX can be achieved with plain JavaScript<br>
+            while maintaining all the functionality of framework-based solutions.</p>
+        </div>
+    </div>
+</body>
+</html>
