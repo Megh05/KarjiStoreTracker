@@ -107,3 +107,23 @@ The application is architected to support migration from MSSQL to PostgreSQL:
 - MSSQL implementation in storage layer can be swapped out
 - Shared schema types ensure consistency across database layers
 - Migration scripts ready for data transfer when needed
+
+## Recent Changes (July 22, 2025)
+
+### JavaScript Version Enhanced with MSSQL Support
+- Added complete MSSQL Server connectivity to JavaScript version
+- Created Node.js server with `mssql` package integration
+- Implemented automatic fallback to mock data if database unavailable  
+- Added comprehensive environment variable configuration (.env support)
+- Created complete database setup documentation (MSSQL-SETUP.md)
+- Enhanced startup scripts with automatic dependency installation
+- Updated packaging to include all MSSQL-related files
+- New downloadable bundle: `karjistore-chatbot-javascript-mssql-v2.0.zip` (28KB)
+
+### Key Features Added
+- Direct MSSQL database queries using same nopCommerce schema as React version
+- Connection pooling with timeout and error handling
+- Status mapping for order and shipping statuses  
+- Graceful database connection management with automatic fallback
+- Cross-platform startup scripts that detect Node.js vs Python environments
+- Production-ready configuration with environment variable support

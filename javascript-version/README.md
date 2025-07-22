@@ -22,6 +22,35 @@ python -m http.server 8080
 
 Then open your browser to: **http://localhost:8080**
 
+## MSSQL Database Setup
+
+### Quick Setup
+1. Install dependencies: `npm install`
+2. Copy `.env.example` to `.env`
+3. Edit `.env` with your database credentials:
+   ```env
+   DB_SERVER=your-server.database.windows.net
+   DB_NAME=karjistoreDB
+   DB_USER=your-username
+   DB_PASSWORD=your-password
+   DB_ENCRYPT=true
+   ```
+4. Start server: `node server.js`
+
+### Environment Variables
+Configure your MSSQL connection using these environment variables:
+
+- `DB_SERVER` - Database server hostname
+- `DB_NAME` - Database name (e.g., karjistoreDB) 
+- `DB_USER` - Database username
+- `DB_PASSWORD` - Database password
+- `DB_PORT` - Database port (default: 1433)
+- `DB_ENCRYPT` - Enable encryption (true/false)
+- `DB_TRUST_CERT` - Trust server certificate (true/false)
+
+### Fallback Mode
+If database connection fails, the server automatically falls back to mock data, ensuring the chatbot always works.
+
 ## Features
 
 ✅ **Complete Feature Parity**

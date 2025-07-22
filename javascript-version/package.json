@@ -1,10 +1,11 @@
 {
   "name": "karjistore-chatbot-javascript",
   "version": "1.0.0",
-  "description": "KarjiStore Customer Service Chatbot - JavaScript Version",
+  "description": "KarjiStore Customer Service Chatbot - JavaScript Version with MSSQL Support",
   "main": "index.html",
   "scripts": {
     "start": "node server.js",
+    "install": "npm install",
     "serve": "python3 -m http.server 8080"
   },
   "keywords": [
@@ -13,9 +14,12 @@
     "javascript",
     "html",
     "css",
-    "order-tracking"
+    "order-tracking",
+    "mssql"
   ],
   "author": "KarjiStore",
   "license": "MIT",
-  "dependencies": {}
+  "dependencies": {
+    "mssql": "^10.0.2"
+  }
 }

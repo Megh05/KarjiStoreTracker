@@ -254,8 +254,8 @@ class ChatbotApp {
   // Track order API call
   async trackOrder(email, orderId) {
     try {
-      // Try to use the backend API first
-      const response = await fetch('http://localhost:5000/api/track-order', {
+      // Use the integrated Node.js server API
+      const response = await fetch('/api/track-order', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -269,8 +269,8 @@ class ChatbotApp {
 
       return await response.json();
     } catch (error) {
-      // Fallback to mock data if backend is not available
-      console.warn('Backend not available, using mock data:', error);
+      console.error('API request failed:', error);
+      // If we're running without the Node.js server, fallback to mock data
       return this.getMockOrderData(email, orderId);
     }
   }
