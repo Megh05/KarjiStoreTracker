@@ -1,0 +1,21 @@
+{
+  "name": "karjistore-chatbot-javascript",
+  "version": "1.0.0",
+  "description": "KarjiStore Customer Service Chatbot - JavaScript Version",
+  "main": "index.html",
+  "scripts": {
+    "start": "node server.js",
+    "serve": "python3 -m http.server 8080"
+  },
+  "keywords": [
+    "chatbot",
+    "customer-service", 
+    "javascript",
+    "html",
+    "css",
+    "order-tracking"
+  ],
+  "author": "KarjiStore",
+  "license": "MIT",
+  "dependencies": {}
+}

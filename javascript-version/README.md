@@ -2,6 +2,26 @@
 
 A plain JavaScript, HTML, and CSS implementation of the KarjiStore customer service chatbot with identical functionality to the React version.
 
+## Quick Start
+
+### Option 1: Double-click to run (Windows/Mac/Linux)
+- **Windows**: Double-click `start.bat`
+- **Mac/Linux**: Double-click `start.sh` or run `./start.sh` in terminal
+
+### Option 2: Manual start
+```bash
+# With Node.js (recommended)
+node server.js
+
+# With Python 3
+python3 -m http.server 8080
+
+# With Python 2
+python -m http.server 8080
+```
+
+Then open your browser to: **http://localhost:8080**
+
 ## Features
 
 ✅ **Complete Feature Parity**
