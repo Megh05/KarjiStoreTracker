@@ -44,11 +44,13 @@ function App() {
 
           {/* Chat Widget */}
           <div
-            className={`fixed bottom-24 right-5 w-96 h-[600px] bg-white rounded-2xl shadow-2xl transition-all duration-300 z-40 overflow-hidden ${
+            className={`fixed transition-all duration-300 z-40 overflow-hidden bg-white shadow-2xl ${
               isWidgetOpen 
                 ? 'opacity-100 translate-y-0' 
                 : 'opacity-0 translate-y-full pointer-events-none'
-            } md:w-96 max-md:fixed max-md:inset-0 max-md:w-full max-md:h-full max-md:rounded-none max-md:bottom-0 max-md:right-0`}
+            } 
+            sm:bottom-24 sm:right-5 sm:w-96 sm:h-[600px] sm:rounded-2xl
+            max-sm:inset-0 max-sm:w-full max-sm:h-full max-sm:rounded-none`}
           >
             <Router />
           </div>

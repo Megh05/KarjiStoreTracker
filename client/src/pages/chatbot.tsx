@@ -222,98 +222,29 @@ Order Date: ${new Date(trackingData.order.orderDate).toLocaleDateString()}`,
 
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row bg-neutral-50">
-      {/* Mobile Header */}
-      <div className="bg-white shadow-sm border-b border-neutral-100 p-4 lg:hidden">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
-              <Bot className="text-white w-5 h-5" />
-            </div>
-            <div>
-              <h1 className="font-semibold text-neutral-800">KarjiStore Support</h1>
-              <p className="text-sm text-neutral-500">Online • Instant replies</p>
-            </div>
+    <div className="w-full h-full flex flex-col bg-white">
+      {/* Chat Header */}
+      <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4 flex items-center justify-between">
+        <div className="flex items-center space-x-3">
+          <div className="w-8 h-8 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
+            <MessageCircle className="w-4 h-4 text-white" />
           </div>
-          <button
-            onClick={restartChat}
-            className="p-2 text-neutral-400 hover:text-neutral-600 transition-colors"
-            title="Restart Chat"
-          >
-            <RefreshCw className="w-4 h-4" />
-          </button>
+          <div>
+            <h1 className="font-semibold text-lg">KarjiStore Support</h1>
+            <p className="text-sm text-white text-opacity-80">Online • Instant replies</p>
+          </div>
         </div>
+        <button
+          onClick={restartChat}
+          className="p-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition-colors"
+          title="Restart Chat"
+        >
+          <RefreshCw className="w-4 h-4" />
+        </button>
       </div>
 
-      {/* Desktop Sidebar */}
-      <div className="hidden lg:block w-80 bg-white shadow-lg border-r border-neutral-100">
-        <div className="p-6 border-b border-neutral-100">
-          <div className="flex items-center space-x-4 mb-4">
-            <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center">
-              <Bot className="text-white w-6 h-6" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-neutral-800">KarjiStore</h1>
-              <p className="text-neutral-500">Customer Support Bot</p>
-            </div>
-          </div>
-          <div className="bg-neutral-50 rounded-lg p-4">
-            <div className="flex items-center space-x-2 text-sm text-neutral-600">
-              <div className="w-2 h-2 bg-secondary rounded-full"></div>
-              <span>Online • Instant replies</span>
-            </div>
-          </div>
-        </div>
-        
-        {/* Quick Actions */}
-        <div className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-neutral-800">Quick Actions</h3>
-            <button
-              onClick={restartChat}
-              className="p-2 text-neutral-400 hover:text-neutral-600 transition-colors"
-              title="Restart Chat"
-            >
-              <RefreshCw className="w-4 h-4" />
-            </button>
-          </div>
-          <div className="space-y-3">
-            <button 
-              onClick={() => handleOptionSelect('track')}
-              className="w-full text-left p-3 rounded-lg bg-neutral-50 hover:bg-neutral-100 transition-colors flex items-center space-x-3"
-            >
-              <Package className="text-primary w-4 h-4" />
-              <span className="text-sm font-medium">Track Order</span>
-            </button>
-            <button 
-              onClick={() => handleOptionSelect('general')}
-              className="w-full text-left p-3 rounded-lg bg-neutral-50 hover:bg-neutral-100 transition-colors flex items-center space-x-3"
-            >
-              <MessageCircle className="text-primary w-4 h-4" />
-              <span className="text-sm font-medium">General Inquiry</span>
-            </button>
-            <button 
-              onClick={() => handleOptionSelect('return')}
-              className="w-full text-left p-3 rounded-lg bg-neutral-50 hover:bg-neutral-100 transition-colors flex items-center space-x-3"
-            >
-              <RotateCcw className="text-primary w-4 h-4" />
-              <span className="text-sm font-medium">Returns & Refunds</span>
-            </button>
-            <button 
-              onClick={() => handleOptionSelect('support')}
-              className="w-full text-left p-3 rounded-lg bg-neutral-50 hover:bg-neutral-100 transition-colors flex items-center space-x-3"
-            >
-              <Settings className="text-primary w-4 h-4" />
-              <span className="text-sm font-medium">Technical Support</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col">
-        {/* Chat Messages */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4 max-h-[calc(100vh-120px)] lg:max-h-[calc(100vh-80px)]">
+      {/* Chat Messages */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0">
           {messages.map((message) => (
             <ChatMessage
               key={message.id}
@@ -324,21 +255,20 @@ Order Date: ${new Date(trackingData.order.orderDate).toLocaleDateString()}`,
             />
           ))}
           <div ref={messagesEndRef} />
-        </div>
-
-        {/* Chat Input */}
-        <ChatInput
-          onSendMessage={handleSendMessage}
-          disabled={currentFlow === null}
-          placeholder={
-            currentFlow === null 
-              ? "Please select an option above to get started..."
-              : currentFlow === 'track'
-              ? "Use the form above to track your order"
-              : "Type your message..."
-          }
-        />
       </div>
+
+      {/* Chat Input */}
+      <ChatInput
+        onSendMessage={handleSendMessage}
+        disabled={currentFlow === null}
+        placeholder={
+          currentFlow === null 
+            ? "Please select an option above to get started..."
+            : currentFlow === 'track'
+            ? "Use the form above to track your order"
+            : "Type your message..."
+        }
+      />
 
       {/* Order Tracking Modal */}
       {orderData && (
