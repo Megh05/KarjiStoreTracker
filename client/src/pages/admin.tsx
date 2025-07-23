@@ -356,7 +356,7 @@ export default function AdminDashboard() {
                                   </SelectItem>
                                 ))
                               ) : (
-                                <SelectItem value="" disabled>No models available</SelectItem>
+                                <SelectItem value="no-models" disabled>No models available</SelectItem>
                               )}
                             </SelectContent>
                           </Select>

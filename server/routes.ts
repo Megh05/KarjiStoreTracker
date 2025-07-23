@@ -55,7 +55,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         version: "1.0.0",
         timestamp: new Date().toISOString()
       });
-    } catch (error) {
+    } catch (error: any) {
       res.json({
         database: {
           configured: isDatabaseConfigured,
@@ -65,7 +65,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         },
         vectorStorage: {
           initialized: false,
-          error: error.message
+          error: error?.message || 'Unknown error'
         },
         version: "1.0.0",
         timestamp: new Date().toISOString()
