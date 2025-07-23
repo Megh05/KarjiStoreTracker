@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, timestamp, decimal, uniqueIdentifier } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, timestamp, decimal, json } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -121,3 +121,117 @@ export type OrderWithDetails = Order & {
 };
 
 export type OrderStatus = "pending" | "processing" | "shipped" | "delivered" | "cancelled";
+
+// AI Configuration tables
+export const aiConfig = pgTable("ai_config", {
+  id: serial("id").primaryKey(),
+  provider: text("provider").notNull(), // 'azure' or 'ollama'
+  config: json("config").notNull(), // Store provider-specific config
+  isActive: boolean("is_active").default(true),
+  customInstructions: text("custom_instructions"),
+  createdOnUtc: timestamp("created_on_utc").defaultNow(),
+  updatedOnUtc: timestamp("updated_on_utc").defaultNow(),
+});
+
+// Knowledge base for RAG
+export const knowledgeBase = pgTable("knowledge_base", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  content: text("content").notNull(),
+  type: text("type").notNull(), // 'pdf', 'faq', 'website', 'merchant'
+  sourceUrl: text("source_url"),
+  vectorId: text("vector_id"), // Reference to vector database
+  metadata: json("metadata"), // Additional metadata
+  isActive: boolean("is_active").default(true),
+  createdOnUtc: timestamp("created_on_utc").defaultNow(),
+  updatedOnUtc: timestamp("updated_on_utc").defaultNow(),
+});
+
+// Product information from merchant feeds
+export const products = pgTable("products", {
+  id: serial("id").primaryKey(),
+  productId: text("product_id").notNull().unique(),
+  title: text("title").notNull(),
+  description: text("description"),
+  price: decimal("price", { precision: 10, scale: 2 }),
+  imageUrl: text("image_url"),
+  productUrl: text("product_url"),
+  category: text("category"),
+  availability: text("availability"),
+  brand: text("brand"),
+  vectorId: text("vector_id"), // Reference to vector database
+  metadata: json("metadata"),
+  createdOnUtc: timestamp("created_on_utc").defaultNow(),
+  updatedOnUtc: timestamp("updated_on_utc").defaultNow(),
+});
+
+// Merchant feed configuration
+export const merchantFeeds = pgTable("merchant_feeds", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  feedUrl: text("feed_url").notNull(),
+  isActive: boolean("is_active").default(true),
+  lastSyncedAt: timestamp("last_synced_at"),
+  syncInterval: integer("sync_interval").default(10800), // 3 hours in seconds
+  createdOnUtc: timestamp("created_on_utc").defaultNow(),
+});
+
+// Validation schemas
+export const insertAiConfigSchema = createInsertSchema(aiConfig).omit({
+  id: true,
+  createdOnUtc: true,
+  updatedOnUtc: true,
+});
+
+export const insertKnowledgeBaseSchema = createInsertSchema(knowledgeBase).omit({
+  id: true,
+  createdOnUtc: true,
+  updatedOnUtc: true,
+});
+
+export const insertProductSchema = createInsertSchema(products).omit({
+  id: true,
+  createdOnUtc: true,
+  updatedOnUtc: true,
+});
+
+export const insertMerchantFeedSchema = createInsertSchema(merchantFeeds).omit({
+  id: true,
+  createdOnUtc: true,
+});
+
+// AI Configuration validation schemas
+export const azureConfigSchema = z.object({
+  endpoint: z.string().url("Please enter a valid Azure OpenAI endpoint"),
+  apiKey: z.string().min(1, "API key is required"),
+  deploymentName: z.string().min(1, "Deployment name is required"),
+  apiVersion: z.string().default("2024-02-01"),
+});
+
+export const ollamaConfigSchema = z.object({
+  endpoint: z.string().url("Please enter a valid Ollama endpoint").default("http://localhost:11434"),
+  model: z.string().min(1, "Model name is required"),
+});
+
+export const aiProviderConfigSchema = z.object({
+  provider: z.enum(["azure", "ollama"]),
+  config: z.union([azureConfigSchema, ollamaConfigSchema]),
+  customInstructions: z.string().optional(),
+});
+
+// Types
+export type InsertAiConfig = z.infer<typeof insertAiConfigSchema>;
+export type AiConfig = typeof aiConfig.$inferSelect;
+
+export type InsertKnowledgeBase = z.infer<typeof insertKnowledgeBaseSchema>;
+export type KnowledgeBase = typeof knowledgeBase.$inferSelect;
+
+export type InsertProduct = z.infer<typeof insertProductSchema>;
+export type Product = typeof products.$inferSelect;
+
+export type InsertMerchantFeed = z.infer<typeof insertMerchantFeedSchema>;
+export type MerchantFeed = typeof merchantFeeds.$inferSelect;
+
+export type AzureConfig = z.infer<typeof azureConfigSchema>;
+export type OllamaConfig = z.infer<typeof ollamaConfigSchema>;
+export type AiProviderConfig = z.infer<typeof aiProviderConfigSchema>;

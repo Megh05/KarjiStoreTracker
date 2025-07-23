@@ -1,5 +1,5 @@
 import sql from 'mssql';
-import { customers, orders, orderNotes, chatMessages, type Customer, type Order, type OrderNote, type ChatMessage, type OrderWithDetails, type InsertChatMessage } from "@shared/schema";
+import { customers, orders, orderNotes, chatMessages, aiConfig, knowledgeBase, products, merchantFeeds, type Customer, type Order, type OrderNote, type ChatMessage, type OrderWithDetails, type InsertChatMessage, type AiConfig, type InsertAiConfig, type KnowledgeBase, type InsertKnowledgeBase, type Product, type InsertProduct, type MerchantFeed, type InsertMerchantFeed } from "@shared/schema";
 import { mssqlConfig, isDatabaseConfigured } from "./config";
 
 // Mock data for demonstration
@@ -161,9 +161,32 @@ export interface IStorage {
   // Chat methods
   createChatMessage(message: InsertChatMessage): Promise<ChatMessage>;
   getChatMessagesBySession(sessionId: string): Promise<ChatMessage[]>;
+  getChatHistory(sessionId: string): Promise<ChatMessage[]>;
   
   // Customer methods
   getCustomerByEmail(email: string): Promise<Customer | undefined>;
+  
+  // AI Configuration methods
+  getAiConfig(): Promise<AiConfig | undefined>;
+  saveAiConfig(config: InsertAiConfig): Promise<AiConfig>;
+  
+  // Knowledge Base methods
+  addKnowledgeBase(knowledge: InsertKnowledgeBase): Promise<KnowledgeBase>;
+  getKnowledgeBase(): Promise<KnowledgeBase[]>;
+  updateKnowledgeBase(id: number, updates: Partial<InsertKnowledgeBase>): Promise<void>;
+  deleteKnowledgeBase(id: number): Promise<void>;
+  
+  // Product methods
+  addProduct(product: InsertProduct): Promise<Product>;
+  getProducts(): Promise<Product[]>;
+  updateProduct(id: number, updates: Partial<InsertProduct>): Promise<void>;
+  deleteProduct(id: number): Promise<void>;
+  
+  // Merchant Feed methods
+  addMerchantFeed(feed: InsertMerchantFeed): Promise<MerchantFeed>;
+  getMerchantFeeds(): Promise<MerchantFeed[]>;
+  updateMerchantFeed(id: number, updates: Partial<InsertMerchantFeed>): Promise<void>;
+  deleteMerchantFeed(id: number): Promise<void>;
 }
 
 // Mock Storage for development - replace with MSSQLStorage when database is available
@@ -228,8 +251,129 @@ export class MockStorage implements IStorage {
       .sort((a, b) => (a.createdOnUtc?.getTime() || 0) - (b.createdOnUtc?.getTime() || 0));
   }
 
+  async getChatHistory(sessionId: string): Promise<ChatMessage[]> {
+    return this.getChatMessagesBySession(sessionId);
+  }
+
   async getCustomerByEmail(email: string): Promise<Customer | undefined> {
     return mockCustomers.find(c => c.email.toLowerCase() === email.toLowerCase() && !c.deleted);
+  }
+
+  // AI Configuration mock methods
+  private mockAiConfig: AiConfig | null = null;
+  private mockKnowledgeBase: KnowledgeBase[] = [];
+  private mockProducts: Product[] = [];
+  private mockMerchantFeeds: MerchantFeed[] = [];
+
+  async getAiConfig(): Promise<AiConfig | undefined> {
+    return this.mockAiConfig || undefined;
+  }
+
+  async saveAiConfig(config: InsertAiConfig): Promise<AiConfig> {
+    this.mockAiConfig = {
+      id: 1,
+      ...config,
+      createdOnUtc: new Date(),
+      updatedOnUtc: new Date(),
+    };
+    return this.mockAiConfig;
+  }
+
+  async addKnowledgeBase(knowledge: InsertKnowledgeBase): Promise<KnowledgeBase> {
+    const newKnowledge: KnowledgeBase = {
+      id: this.mockKnowledgeBase.length + 1,
+      ...knowledge,
+      createdOnUtc: new Date(),
+      updatedOnUtc: new Date(),
+    };
+    this.mockKnowledgeBase.push(newKnowledge);
+    return newKnowledge;
+  }
+
+  async getKnowledgeBase(): Promise<KnowledgeBase[]> {
+    return this.mockKnowledgeBase.filter(kb => kb.isActive);
+  }
+
+  async updateKnowledgeBase(id: number, updates: Partial<InsertKnowledgeBase>): Promise<void> {
+    const index = this.mockKnowledgeBase.findIndex(kb => kb.id === id);
+    if (index !== -1) {
+      this.mockKnowledgeBase[index] = {
+        ...this.mockKnowledgeBase[index],
+        ...updates,
+        updatedOnUtc: new Date(),
+      };
+    }
+  }
+
+  async deleteKnowledgeBase(id: number): Promise<void> {
+    const index = this.mockKnowledgeBase.findIndex(kb => kb.id === id);
+    if (index !== -1) {
+      this.mockKnowledgeBase[index].isActive = false;
+    }
+  }
+
+  async addProduct(product: InsertProduct): Promise<Product> {
+    const newProduct: Product = {
+      id: this.mockProducts.length + 1,
+      ...product,
+      createdOnUtc: new Date(),
+      updatedOnUtc: new Date(),
+    };
+    this.mockProducts.push(newProduct);
+    return newProduct;
+  }
+
+  async getProducts(): Promise<Product[]> {
+    return this.mockProducts;
+  }
+
+  async updateProduct(id: number, updates: Partial<InsertProduct>): Promise<void> {
+    const index = this.mockProducts.findIndex(p => p.id === id);
+    if (index !== -1) {
+      this.mockProducts[index] = {
+        ...this.mockProducts[index],
+        ...updates,
+        updatedOnUtc: new Date(),
+      };
+    }
+  }
+
+  async deleteProduct(id: number): Promise<void> {
+    const index = this.mockProducts.findIndex(p => p.id === id);
+    if (index !== -1) {
+      this.mockProducts.splice(index, 1);
+    }
+  }
+
+  async addMerchantFeed(feed: InsertMerchantFeed): Promise<MerchantFeed> {
+    const newFeed: MerchantFeed = {
+      id: this.mockMerchantFeeds.length + 1,
+      ...feed,
+      createdOnUtc: new Date(),
+    };
+    this.mockMerchantFeeds.push(newFeed);
+    return newFeed;
+  }
+
+  async getMerchantFeeds(): Promise<MerchantFeed[]> {
+    return this.mockMerchantFeeds.filter(feed => feed.isActive);
+  }
+
+  async updateMerchantFeed(id: number, updates: Partial<InsertMerchantFeed>): Promise<void> {
+    const index = this.mockMerchantFeeds.findIndex(feed => feed.id === id);
+    if (index !== -1) {
+      this.mockMerchantFeeds[index] = {
+        ...this.mockMerchantFeeds[index],
+        ...updates,
+      };
+    }
+  }
+
+  async deleteMerchantFeed(id: number): Promise<void> {
+    const index = this.mockMerchantFeeds.findIndex(feed => feed.id === id);
+    if (index !== -1) {
+      this.mockMerchantFeeds[index].isActive = false;
+    }
   }
 }
 
