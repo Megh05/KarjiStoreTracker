@@ -1,6 +1,5 @@
 import fs from 'fs';
 import path from 'path';
-import pdf from 'pdf-parse';
 import * as cheerio from 'cheerio';
 import { parseString } from 'xml2js';
 import { ragService } from './rag-service';
@@ -15,23 +14,8 @@ export interface ParsedContent {
 
 export class ContentParser {
   async parsePDF(filePath: string, title?: string): Promise<ParsedContent> {
-    try {
-      const dataBuffer = fs.readFileSync(filePath);
-      const data = await pdf(dataBuffer);
-      
-      return {
-        title: title || path.basename(filePath, '.pdf'),
-        content: data.text,
-        type: 'pdf',
-        metadata: {
-          pages: data.numpages,
-          info: data.info
-        }
-      };
-    } catch (error) {
-      console.error('Error parsing PDF:', error);
-      throw new Error('Failed to parse PDF file');
-    }
+    // PDF parsing temporarily disabled - will implement with different library
+    throw new Error('PDF parsing temporarily unavailable. Please use text files or website URLs instead.');
   }
 
   async parseWebsite(url: string): Promise<ParsedContent> {

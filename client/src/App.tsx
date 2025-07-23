@@ -6,6 +6,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Chatbot from "@/pages/chatbot";
+import AdminDashboard from "@/pages/admin";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -13,6 +14,7 @@ function Router() {
     <Switch>
       <Route path="/" component={Chatbot} />
       <Route path="/chat" component={Chatbot} />
+      <Route path="/admin" component={AdminDashboard} />
       <Route component={NotFound} />
     </Switch>
   );
@@ -42,6 +44,11 @@ function App() {
             <MessageCircle size={28} strokeWidth={2} />
           </button>
 
+          {/* Full Screen Admin Dashboard */}
+          <div className="absolute inset-0">
+            <Router />
+          </div>
+          
           {/* Chat Widget */}
           <div
             className={`fixed transition-all duration-300 z-40 overflow-hidden bg-white shadow-2xl ${
@@ -52,7 +59,7 @@ function App() {
             sm:bottom-24 sm:right-5 sm:w-96 sm:h-[600px] sm:rounded-2xl
             max-sm:inset-0 max-sm:w-full max-sm:h-full max-sm:rounded-none`}
           >
-            <Router />
+            <Chatbot />
           </div>
 
           {/* Background overlay for mobile */}

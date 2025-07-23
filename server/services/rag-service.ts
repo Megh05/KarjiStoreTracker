@@ -1,4 +1,4 @@
-import { vectorService, VectorDocument, SearchResult } from './vector-service';
+import { vectorStorage } from './vector-storage';
 import { aiService } from './ai-service';
 import { storage } from '../storage';
 
@@ -68,19 +68,23 @@ export class RAGService {
     
     try {
       // Search knowledge base
-      const knowledgeResults = await vectorService.searchSimilar('knowledge_base', query, 3);
-      allResults.push(...knowledgeResults);
+      const knowledgeResults = await vectorStorage.searchKnowledge(query, 3);
+      allResults.push(...knowledgeResults.map(r => ({
+        id: r.metadata.parentId || 'unknown',
+        content: r.content,
+        score: r.score,
+        metadata: r.metadata
+      })));
       
       // Search products if it's a product-related query
       if (intent === 'product_recommendation' || intent === 'general') {
-        const productResults = await vectorService.searchSimilar('products', query, 5);
-        allResults.push(...productResults);
-      }
-      
-      // Search FAQs for support queries
-      if (intent === 'support' || intent === 'general') {
-        const faqResults = await vectorService.searchSimilar('faqs', query, 3);
-        allResults.push(...faqResults);
+        const productResults = await vectorStorage.searchProducts(query, 5);
+        allResults.push(...productResults.map(r => ({
+          id: r.metadata.productId || 'unknown',
+          content: r.content,
+          score: r.score,
+          metadata: r.metadata
+        })));
       }
       
       // Sort by relevance score and return top results
@@ -159,7 +163,7 @@ export class RAGService {
 
   private async getConversationHistory(sessionId: string): Promise<{ role: string; content: string }[]> {
     try {
-      const messages = await storage.getChatHistory(sessionId);
+      const messages = await vectorStorage.getChatHistory(sessionId);
       return messages.map(msg => ({
         role: msg.isBot ? 'assistant' : 'user',
         content: msg.content
@@ -191,38 +195,16 @@ export class RAGService {
     metadata?: Record<string, any>
   ): Promise<string> {
     try {
-      const documentId = vectorService.generateDocumentId();
-      
-      // Chunk large content
-      const chunks = vectorService.chunkText(content);
-      const documents: VectorDocument[] = chunks.map((chunk, index) => ({
-        id: `${documentId}_chunk_${index}`,
-        content: chunk,
-        metadata: {
-          title,
-          type,
-          sourceUrl,
-          chunkIndex: index,
-          totalChunks: chunks.length,
-          ...metadata
-        }
-      }));
-      
-      // Add to vector database
-      await vectorService.addDocuments('knowledge_base', documents);
-      
-      // Store in regular database
-      await storage.addKnowledgeBase({
+      // Add to vector storage only
+      const knowledgeItem = await vectorStorage.addKnowledgeBase({
         title,
         content,
         type,
         sourceUrl,
-        vectorId: documentId,
-        metadata,
-        isActive: true
+        metadata
       });
       
-      return documentId;
+      return knowledgeItem.vectorId || knowledgeItem.id.toString();
     } catch (error) {
       console.error('Error adding knowledge document:', error);
       throw error;
@@ -242,36 +224,8 @@ export class RAGService {
     metadata?: Record<string, any>;
   }): Promise<void> {
     try {
-      const documentId = vectorService.generateDocumentId();
-      
-      // Create searchable content combining title and description
-      const searchableContent = `${productData.title} ${productData.description} ${productData.category} ${productData.brand}`.trim();
-      
-      const document: VectorDocument = {
-        id: documentId,
-        content: searchableContent,
-        metadata: {
-          type: 'product',
-          productId: productData.productId,
-          title: productData.title,
-          price: productData.price,
-          imageUrl: productData.imageUrl,
-          productUrl: productData.productUrl,
-          category: productData.category,
-          brand: productData.brand,
-          ...productData.metadata
-        }
-      };
-      
-      // Add to vector database
-      await vectorService.addDocuments('products', [document]);
-      
-      // Store in regular database
-      await storage.addProduct({
-        ...productData,
-        vectorId: documentId
-      });
-      
+      // Add to vector storage only
+      await vectorStorage.addProduct(productData);
     } catch (error) {
       console.error('Error adding product:', error);
       throw error;

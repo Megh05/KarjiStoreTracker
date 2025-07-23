@@ -5,20 +5,72 @@ import { fromZodError } from "zod-validation-error";
 import { storage } from "./storage";
 import { orderTrackingSchema, chatMessageSchema } from "@shared/schema";
 import { isDatabaseConfigured, mssqlConfig, databaseType } from "./config";
+import { registerAdminRoutes } from "./routes/admin";
+import { ragService } from "./services/rag-service";
+import { vectorStorage } from "./services/vector-storage";
+import { aiService } from "./services/ai-service";
+import { schedulerService } from "./services/scheduler";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Initialize services
+  try {
+    await vectorStorage.initialize();
+    await schedulerService.initialize();
+    
+    // Load AI configuration if available
+    const aiConfig = await vectorStorage.getAiConfig();
+    if (aiConfig) {
+      aiService.setProvider(aiConfig);
+      console.log('✓ AI service initialized with saved configuration');
+    }
+  } catch (error) {
+    console.error('⚠️ Warning: Failed to initialize some services:', error);
+  }
+
+  // Register admin routes
+  registerAdminRoutes(app);
+  
   // Database status endpoint
-  app.get("/api/status", (req, res) => {
-    res.json({
-      database: {
-        configured: isDatabaseConfigured,
-        server: mssqlConfig.server || 'Not configured',
-        database: mssqlConfig.database,
-        type: isDatabaseConfigured ? 'MSSQL' : 'Mock Data'
-      },
-      version: "1.0.0",
-      timestamp: new Date().toISOString()
-    });
+  app.get("/api/status", async (req, res) => {
+    try {
+      const vectorStats = await vectorStorage.getStats();
+      const aiConfig = await vectorStorage.getAiConfig();
+      
+      res.json({
+        database: {
+          configured: isDatabaseConfigured,
+          server: mssqlConfig.server || 'Not configured',
+          database: mssqlConfig.database,
+          type: isDatabaseConfigured ? 'MSSQL' : 'Mock Data'
+        },
+        vectorStorage: {
+          initialized: true,
+          stats: vectorStats
+        },
+        aiProvider: {
+          configured: !!aiConfig,
+          provider: aiConfig?.provider || 'none',
+          active: aiConfig?.isActive || false
+        },
+        version: "1.0.0",
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      res.json({
+        database: {
+          configured: isDatabaseConfigured,
+          server: mssqlConfig.server || 'Not configured',
+          database: mssqlConfig.database,
+          type: isDatabaseConfigured ? 'MSSQL' : 'Mock Data'
+        },
+        vectorStorage: {
+          initialized: false,
+          error: error.message
+        },
+        version: "1.0.0",
+        timestamp: new Date().toISOString()
+      });
+    }
   });
   // Track order endpoint
   app.post("/api/track-order", async (req, res) => {
@@ -127,7 +179,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Chat message endpoint
+  // AI Chat endpoint
   app.post("/api/chat/message", async (req, res) => {
     try {
       const validationResult = chatMessageSchema.safeParse(req.body);
@@ -139,31 +191,84 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      const messageData = validationResult.data;
-      const savedMessage = await storage.createChatMessage(messageData);
+      const { sessionId, content, isBot } = validationResult.data;
+      
+      // Save user message to vector storage
+      if (!isBot) {
+        await vectorStorage.saveChatMessage(sessionId, {
+          content,
+          isBot: false
+        });
+      }
 
-      res.json(savedMessage);
+      // Check if this is an order tracking request
+      const lowerContent = content.toLowerCase();
+      if (lowerContent.includes('track') && lowerContent.includes('order')) {
+        // Return a message asking for order details
+        const response = "I'd be happy to help you track your order! Please provide your email address and order ID, and I'll look up the current status for you.";
+        
+        // Save bot response
+        await vectorStorage.saveChatMessage(sessionId, {
+          content: response,
+          isBot: true
+        });
+        
+        return res.json({
+          message: response,
+          type: 'order_tracking_request'
+        });
+      }
+
+      // Use RAG service for general queries
+      const ragResponse = await ragService.query(content, sessionId);
+      
+      // Save bot response to vector storage
+      await vectorStorage.saveChatMessage(sessionId, {
+        content: ragResponse.answer,
+        isBot: true
+      });
+
+      res.json({
+        message: ragResponse.answer,
+        sources: ragResponse.sources,
+        confidence: ragResponse.confidence,
+        type: 'ai_response'
+      });
     } catch (error) {
-      console.error("Chat message error:", error);
+      console.error('Chat Error:', error);
+      const errorResponse = "I apologize, but I'm experiencing some technical difficulties. Please try again in a moment.";
+      
+      // Still try to save the error response
+      try {
+        await vectorStorage.saveChatMessage(req.body.sessionId, {
+          content: errorResponse,
+          isBot: true
+        });
+      } catch (saveError) {
+        console.error('Failed to save error response:', saveError);
+      }
+      
       res.status(500).json({ 
-        error: "Internal server error", 
-        message: "Unable to save message at this time." 
+        message: errorResponse,
+        error: "Chat service temporarily unavailable" 
       });
     }
   });
 
-  // Get chat history endpoint
+  // Get chat history
   app.get("/api/chat/history/:sessionId", async (req, res) => {
     try {
       const { sessionId } = req.params;
-      const messages = await storage.getChatMessagesBySession(sessionId);
-      res.json(messages);
+      const history = await vectorStorage.getChatHistory(sessionId);
+      
+      res.json(history.map(msg => ({
+        content: msg.content,
+        isBot: msg.isBot,
+        timestamp: msg.timestamp
+      })));
     } catch (error) {
-      console.error("Chat history error:", error);
-      res.status(500).json({ 
-        error: "Internal server error", 
-        message: "Unable to retrieve chat history at this time." 
-      });
+      console.error('Error getting chat history:', error);
+      res.status(500).json({ error: "Failed to get chat history" });
     }
   });
 
