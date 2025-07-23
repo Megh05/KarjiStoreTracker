@@ -193,6 +193,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const { sessionId, content, isBot } = validationResult.data;
       
+      // Check if AI provider is configured and active
+      const aiConfigured = await vectorStorage.getAiConfig();
+      if (!aiConfigured || !aiConfigured.isActive) {
+        return res.status(503).json({
+          error: "AI provider not configured",
+          message: "AI assistant is not available. Please configure an AI provider in the admin dashboard."
+        });
+      }
+      
       // Save user message to vector storage
       if (!isBot) {
         await vectorStorage.saveChatMessage(sessionId, {
@@ -201,25 +210,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // Check if this is an order tracking request
-      const lowerContent = content.toLowerCase();
-      if (lowerContent.includes('track') && lowerContent.includes('order')) {
-        // Return a message asking for order details
-        const response = "I'd be happy to help you track your order! Please provide your email address and order ID, and I'll look up the current status for you.";
-        
-        // Save bot response
-        await vectorStorage.saveChatMessage(sessionId, {
-          content: response,
-          isBot: true
-        });
-        
-        return res.json({
-          message: response,
-          type: 'order_tracking_request'
-        });
-      }
-
-      // Use RAG service for general queries
+      // Always run through RAG pipeline for all queries
       const ragResponse = await ragService.query(content, sessionId);
       
       // Save bot response to vector storage
@@ -234,16 +225,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
         confidence: ragResponse.confidence,
         type: 'ai_response'
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Chat Error:', error);
       const errorResponse = "I apologize, but I'm experiencing some technical difficulties. Please try again in a moment.";
       
       // Still try to save the error response
       try {
-        await vectorStorage.saveChatMessage(req.body.sessionId, {
-          content: errorResponse,
-          isBot: true
-        });
+        if (req.body.sessionId) {
+          await vectorStorage.saveChatMessage(req.body.sessionId, {
+            content: errorResponse,
+            isBot: true
+          });
+        }
       } catch (saveError) {
         console.error('Failed to save error response:', saveError);
       }
