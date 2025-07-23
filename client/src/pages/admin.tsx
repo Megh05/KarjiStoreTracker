@@ -20,11 +20,6 @@ interface AiConfig {
   isActive: boolean;
 }
 
-interface OllamaModel {
-  name: string;
-  size: string;
-}
-
 interface KnowledgeBase {
   id: number;
   title: string;
@@ -79,26 +74,26 @@ export default function AdminDashboard() {
   });
 
   // Query for current AI configuration
-  const { data: aiConfig } = useQuery({
+  const { data: aiConfig = null } = useQuery({
     queryKey: ['/api/admin/ai-config'],
     queryFn: () => apiRequest('/api/admin/ai-config')
   });
 
   // Query for Ollama models
-  const { data: ollamaModels, refetch: refetchModels } = useQuery({
+  const { data: ollamaModels = [], refetch: refetchModels } = useQuery({
     queryKey: ['/api/admin/ollama-models'],
     queryFn: () => apiRequest('/api/admin/ollama-models'),
     enabled: selectedProvider === 'ollama'
   });
 
   // Query for knowledge base
-  const { data: knowledgeBase } = useQuery({
+  const { data: knowledgeBase = [] } = useQuery({
     queryKey: ['/api/admin/knowledge-base'],
     queryFn: () => apiRequest('/api/admin/knowledge-base')
   });
 
   // Query for merchant feeds
-  const { data: merchantFeeds } = useQuery({
+  const { data: merchantFeeds = [] } = useQuery({
     queryKey: ['/api/admin/merchant-feeds'],
     queryFn: () => apiRequest('/api/admin/merchant-feeds')
   });
@@ -195,12 +190,12 @@ export default function AdminDashboard() {
   // Load current config
   useEffect(() => {
     if (aiConfig) {
-      setSelectedProvider(aiConfig.provider);
+      setSelectedProvider(aiConfig.provider || 'azure');
       setCustomInstructions(aiConfig.customInstructions || '');
       
-      if (aiConfig.provider === 'azure') {
+      if (aiConfig.provider === 'azure' && aiConfig.config) {
         setAzureConfig(aiConfig.config);
-      } else if (aiConfig.provider === 'ollama') {
+      } else if (aiConfig.provider === 'ollama' && aiConfig.config) {
         setOllamaConfig(aiConfig.config);
       }
     }
@@ -249,196 +244,205 @@ export default function AdminDashboard() {
               <Database className="w-4 h-4" />
               Knowledge Base
             </TabsTrigger>
-            <TabsTrigger value="merchant" className="flex items-center gap-2">
+            <TabsTrigger value="feeds" className="flex items-center gap-2">
               <ExternalLink className="w-4 h-4" />
               Merchant Feeds
             </TabsTrigger>
-            <TabsTrigger value="upload" className="flex items-center gap-2">
-              <Upload className="w-4 h-4" />
-              Upload Content
+            <TabsTrigger value="analytics" className="flex items-center gap-2">
+              <RefreshCw className="w-4 h-4" />
+              Analytics
             </TabsTrigger>
           </TabsList>
 
           {/* AI Configuration Tab */}
-          <TabsContent value="ai-config">
+          <TabsContent value="ai-config" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>AI Provider Configuration</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <Bot className="w-5 h-5" />
+                  AI Provider Configuration
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div>
-                  <Label htmlFor="provider">AI Provider</Label>
-                  <Select value={selectedProvider} onValueChange={(value: 'azure' | 'ollama') => setSelectedProvider(value)}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select AI Provider" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="azure">Azure OpenAI</SelectItem>
-                      <SelectItem value="ollama">Ollama (Local)</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {selectedProvider === 'azure' && (
-                  <div className="space-y-4">
-                    <div>
-                      <Label htmlFor="endpoint">Azure OpenAI Endpoint</Label>
-                      <Input
-                        id="endpoint"
-                        placeholder="https://your-resource.openai.azure.com"
-                        value={azureConfig.endpoint}
-                        onChange={(e) => setAzureConfig(prev => ({ ...prev, endpoint: e.target.value }))}
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="apiKey">API Key</Label>
-                      <Input
-                        id="apiKey"
-                        type="password"
-                        placeholder="Your Azure OpenAI API Key"
-                        value={azureConfig.apiKey}
-                        onChange={(e) => setAzureConfig(prev => ({ ...prev, apiKey: e.target.value }))}
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="deploymentName">Deployment Name</Label>
-                      <Input
-                        id="deploymentName"
-                        placeholder="gpt-4o"
-                        value={azureConfig.deploymentName}
-                        onChange={(e) => setAzureConfig(prev => ({ ...prev, deploymentName: e.target.value }))}
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="apiVersion">API Version</Label>
-                      <Input
-                        id="apiVersion"
-                        placeholder="2024-02-01"
-                        value={azureConfig.apiVersion}
-                        onChange={(e) => setAzureConfig(prev => ({ ...prev, apiVersion: e.target.value }))}
-                      />
-                    </div>
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="provider">AI Provider</Label>
+                    <Select value={selectedProvider} onValueChange={(value: 'azure' | 'ollama') => setSelectedProvider(value)}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select AI Provider" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="azure">Azure OpenAI</SelectItem>
+                        <SelectItem value="ollama">Ollama (Local)</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
-                )}
 
-                {selectedProvider === 'ollama' && (
-                  <div className="space-y-4">
-                    <div>
-                      <Label htmlFor="ollamaEndpoint">Ollama Endpoint</Label>
-                      <Input
-                        id="ollamaEndpoint"
-                        placeholder="http://localhost:11434"
-                        value={ollamaConfig.endpoint}
-                        onChange={(e) => setOllamaConfig(prev => ({ ...prev, endpoint: e.target.value }))}
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="model">Model</Label>
-                      <div className="flex gap-2">
-                        <Select value={ollamaConfig.model} onValueChange={(value) => setOllamaConfig(prev => ({ ...prev, model: value }))}>
-                          <SelectTrigger className="flex-1">
-                            <SelectValue placeholder="Select Model" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {ollamaModels?.map((model: OllamaModel) => (
-                              <SelectItem key={model.name} value={model.name}>
-                                {model.name} ({model.size})
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <Button 
-                          variant="outline" 
-                          onClick={handleRefreshModels}
-                          disabled={refetchModels.isFetching}
-                        >
-                          <RefreshCw className={`w-4 h-4 ${refetchModels.isFetching ? 'animate-spin' : ''}`} />
-                        </Button>
+                  {selectedProvider === 'azure' && (
+                    <div className="space-y-4 p-4 border rounded-lg bg-blue-50">
+                      <h3 className="font-semibold text-blue-900">Azure OpenAI Configuration</h3>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="azure-endpoint">Endpoint URL</Label>
+                          <Input
+                            id="azure-endpoint"
+                            placeholder="https://your-resource.openai.azure.com"
+                            value={azureConfig.endpoint}
+                            onChange={(e) => setAzureConfig({ ...azureConfig, endpoint: e.target.value })}
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="azure-key">API Key</Label>
+                          <Input
+                            id="azure-key"
+                            type="password"
+                            placeholder="Your Azure OpenAI API key"
+                            value={azureConfig.apiKey}
+                            onChange={(e) => setAzureConfig({ ...azureConfig, apiKey: e.target.value })}
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="azure-deployment">Deployment Name</Label>
+                          <Input
+                            id="azure-deployment"
+                            placeholder="your-deployment-name"
+                            value={azureConfig.deploymentName}
+                            onChange={(e) => setAzureConfig({ ...azureConfig, deploymentName: e.target.value })}
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="azure-version">API Version</Label>
+                          <Input
+                            id="azure-version"
+                            placeholder="2024-02-01"
+                            value={azureConfig.apiVersion}
+                            onChange={(e) => setAzureConfig({ ...azureConfig, apiVersion: e.target.value })}
+                          />
+                        </div>
                       </div>
                     </div>
+                  )}
+
+                  {selectedProvider === 'ollama' && (
+                    <div className="space-y-4 p-4 border rounded-lg bg-green-50">
+                      <div className="flex justify-between items-center">
+                        <h3 className="font-semibold text-green-900">Ollama Configuration</h3>
+                        <Button variant="outline" size="sm" onClick={handleRefreshModels}>
+                          <RefreshCw className="w-4 h-4 mr-2" />
+                          Refresh Models
+                        </Button>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="ollama-endpoint">Ollama Endpoint</Label>
+                          <Input
+                            id="ollama-endpoint"
+                            placeholder="http://localhost:11434"
+                            value={ollamaConfig.endpoint}
+                            onChange={(e) => setOllamaConfig({ ...ollamaConfig, endpoint: e.target.value })}
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="ollama-model">Model</Label>
+                          <Select value={ollamaConfig.model} onValueChange={(value) => setOllamaConfig({ ...ollamaConfig, model: value })}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select model" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {Array.isArray(ollamaModels) && ollamaModels.length > 0 ? (
+                                ollamaModels.map((model: any) => (
+                                  <SelectItem key={model.name} value={model.name}>
+                                    {model.name}
+                                  </SelectItem>
+                                ))
+                              ) : (
+                                <SelectItem value="" disabled>No models available</SelectItem>
+                              )}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  <div>
+                    <Label htmlFor="custom-instructions">Custom Instructions</Label>
+                    <Textarea
+                      id="custom-instructions"
+                      placeholder="Enter custom instructions for the AI assistant..."
+                      rows={4}
+                      value={customInstructions}
+                      onChange={(e) => setCustomInstructions(e.target.value)}
+                    />
                   </div>
-                )}
 
-                <div>
-                  <Label htmlFor="instructions">Custom Instructions</Label>
-                  <Textarea
-                    id="instructions"
-                    placeholder="Additional instructions for the AI model..."
-                    value={customInstructions}
-                    onChange={(e) => setCustomInstructions(e.target.value)}
-                    rows={4}
-                  />
-                </div>
-
-                <div className="flex gap-2">
-                  <Button 
-                    onClick={handleTestConnection}
-                    variant="outline"
-                    disabled={testConnectionMutation.isPending}
-                  >
-                    {testConnectionMutation.isPending ? "Testing..." : "Test Connection"}
-                  </Button>
-                  <Button 
-                    onClick={handleSaveAiConfig}
-                    disabled={saveAiConfigMutation.isPending}
-                  >
-                    {saveAiConfigMutation.isPending ? "Saving..." : "Save Configuration"}
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button onClick={handleSaveAiConfig} disabled={saveAiConfigMutation.isPending}>
+                      {saveAiConfigMutation.isPending ? 'Saving...' : 'Save Configuration'}
+                    </Button>
+                    <Button variant="outline" onClick={handleTestConnection} disabled={testConnectionMutation.isPending}>
+                      {testConnectionMutation.isPending ? 'Testing...' : 'Test Connection'}
+                    </Button>
+                  </div>
                 </div>
               </CardContent>
             </Card>
           </TabsContent>
 
           {/* Knowledge Base Tab */}
-          <TabsContent value="knowledge">
-            <div className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Add Knowledge</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
+          <TabsContent value="knowledge" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Database className="w-5 h-5" />
+                  Knowledge Base Management
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-4 p-4 border rounded-lg bg-gray-50">
+                  <h3 className="font-semibold">Add New Knowledge</h3>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="knowledgeTitle">Title</Label>
+                      <Label htmlFor="knowledge-title">Title</Label>
                       <Input
-                        id="knowledgeTitle"
-                        placeholder="Knowledge title..."
+                        id="knowledge-title"
+                        placeholder="Knowledge title"
                         value={newKnowledge.title}
-                        onChange={(e) => setNewKnowledge(prev => ({ ...prev, title: e.target.value }))}
+                        onChange={(e) => setNewKnowledge({ ...newKnowledge, title: e.target.value })}
                       />
                     </div>
                     <div>
-                      <Label htmlFor="knowledgeType">Type</Label>
-                      <Select value={newKnowledge.type} onValueChange={(value) => setNewKnowledge(prev => ({ ...prev, type: value }))}>
+                      <Label htmlFor="knowledge-type">Type</Label>
+                      <Select value={newKnowledge.type} onValueChange={(value) => setNewKnowledge({ ...newKnowledge, type: value })}>
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="faq">FAQ</SelectItem>
                           <SelectItem value="website">Website</SelectItem>
-                          <SelectItem value="pdf">PDF</SelectItem>
-                          <SelectItem value="manual">Manual</SelectItem>
+                          <SelectItem value="pdf">PDF Document</SelectItem>
+                          <SelectItem value="manual">Manual Entry</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                   </div>
                   <div>
-                    <Label htmlFor="sourceUrl">Source URL (optional)</Label>
+                    <Label htmlFor="knowledge-source">Source URL (optional)</Label>
                     <Input
-                      id="sourceUrl"
-                      placeholder="https://example.com"
+                      id="knowledge-source"
+                      placeholder="https://example.com/source"
                       value={newKnowledge.sourceUrl}
-                      onChange={(e) => setNewKnowledge(prev => ({ ...prev, sourceUrl: e.target.value }))}
+                      onChange={(e) => setNewKnowledge({ ...newKnowledge, sourceUrl: e.target.value })}
                     />
                   </div>
                   <div>
-                    <Label htmlFor="knowledgeContent">Content</Label>
+                    <Label htmlFor="knowledge-content">Content</Label>
                     <Textarea
-                      id="knowledgeContent"
-                      placeholder="Knowledge content..."
+                      id="knowledge-content"
+                      placeholder="Enter the knowledge content..."
+                      rows={4}
                       value={newKnowledge.content}
-                      onChange={(e) => setNewKnowledge(prev => ({ ...prev, content: e.target.value }))}
-                      rows={6}
+                      onChange={(e) => setNewKnowledge({ ...newKnowledge, content: e.target.value })}
                     />
                   </div>
                   <Button 
@@ -446,148 +450,164 @@ export default function AdminDashboard() {
                     disabled={addKnowledgeMutation.isPending || !newKnowledge.title || !newKnowledge.content}
                   >
                     <Plus className="w-4 h-4 mr-2" />
-                    {addKnowledgeMutation.isPending ? "Adding..." : "Add Knowledge"}
+                    {addKnowledgeMutation.isPending ? 'Adding...' : 'Add Knowledge'}
                   </Button>
-                </CardContent>
-              </Card>
+                </div>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle>Knowledge Base Items</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    {knowledgeBase?.map((item: KnowledgeBase) => (
-                      <div key={item.id} className="flex items-center justify-between p-3 border rounded-lg">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2">
-                            <h4 className="font-medium">{item.title}</h4>
-                            <Badge variant="outline">{item.type}</Badge>
+                <div className="space-y-4">
+                  <h3 className="font-semibold">Existing Knowledge Base</h3>
+                  {Array.isArray(knowledgeBase) && knowledgeBase.length > 0 ? (
+                    <div className="grid gap-4">
+                      {knowledgeBase.map((item: KnowledgeBase) => (
+                        <Card key={item.id} className="p-4">
+                          <div className="flex justify-between items-start">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2 mb-2">
+                                <h4 className="font-medium">{item.title}</h4>
+                                <Badge variant="outline">{item.type}</Badge>
+                                {item.isActive && <Badge variant="default">Active</Badge>}
+                              </div>
+                              <p className="text-sm text-gray-600 mb-2">{item.content.substring(0, 200)}...</p>
+                              {item.sourceUrl && (
+                                <a href={item.sourceUrl} target="_blank" rel="noopener noreferrer" 
+                                   className="text-sm text-blue-600 hover:underline">
+                                  View Source
+                                </a>
+                              )}
+                            </div>
+                            <Button variant="ghost" size="sm">
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
                           </div>
-                          <p className="text-sm text-gray-600 mt-1">
-                            {item.content.length > 100 ? `${item.content.substring(0, 100)}...` : item.content}
-                          </p>
-                          {item.sourceUrl && (
-                            <p className="text-xs text-blue-600 mt-1">{item.sourceUrl}</p>
-                          )}
-                        </div>
-                        <Button variant="outline" size="sm">
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+                        </Card>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-gray-500 text-center py-8">No knowledge base entries found. Add some knowledge to get started.</p>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
 
           {/* Merchant Feeds Tab */}
-          <TabsContent value="merchant">
-            <div className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Add Merchant Feed</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <Label htmlFor="feedName">Feed Name</Label>
-                    <Input
-                      id="feedName"
-                      placeholder="Google Shopping Feed"
-                      value={newFeed.name}
-                      onChange={(e) => setNewFeed(prev => ({ ...prev, name: e.target.value }))}
-                    />
+          <TabsContent value="feeds" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <ExternalLink className="w-5 h-5" />
+                  Merchant Feed Management
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-4 p-4 border rounded-lg bg-gray-50">
+                  <h3 className="font-semibold">Add New Merchant Feed</h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="feed-name">Feed Name</Label>
+                      <Input
+                        id="feed-name"
+                        placeholder="Google Merchant Feed"
+                        value={newFeed.name}
+                        onChange={(e) => setNewFeed({ ...newFeed, name: e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="feed-url">Feed URL</Label>
+                      <Input
+                        id="feed-url"
+                        placeholder="https://example.com/feed.xml"
+                        value={newFeed.feedUrl}
+                        onChange={(e) => setNewFeed({ ...newFeed, feedUrl: e.target.value })}
+                      />
+                    </div>
                   </div>
                   <div>
-                    <Label htmlFor="feedUrl">Feed URL</Label>
+                    <Label htmlFor="sync-interval">Sync Interval (seconds)</Label>
                     <Input
-                      id="feedUrl"
-                      placeholder="https://example.com/products.xml"
-                      value={newFeed.feedUrl}
-                      onChange={(e) => setNewFeed(prev => ({ ...prev, feedUrl: e.target.value }))}
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="syncInterval">Sync Interval (seconds)</Label>
-                    <Input
-                      id="syncInterval"
+                      id="sync-interval"
                       type="number"
-                      placeholder="10800"
+                      placeholder="10800 (3 hours)"
                       value={newFeed.syncInterval}
-                      onChange={(e) => setNewFeed(prev => ({ ...prev, syncInterval: parseInt(e.target.value) }))}
+                      onChange={(e) => setNewFeed({ ...newFeed, syncInterval: parseInt(e.target.value) || 10800 })}
                     />
-                    <p className="text-sm text-gray-600 mt-1">Default: 10800 seconds (3 hours)</p>
                   </div>
                   <Button 
                     onClick={() => addMerchantFeedMutation.mutate(newFeed)}
                     disabled={addMerchantFeedMutation.isPending || !newFeed.name || !newFeed.feedUrl}
                   >
                     <Plus className="w-4 h-4 mr-2" />
-                    {addMerchantFeedMutation.isPending ? "Adding..." : "Add Feed"}
+                    {addMerchantFeedMutation.isPending ? 'Adding...' : 'Add Feed'}
                   </Button>
-                </CardContent>
-              </Card>
+                </div>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center justify-between">
-                    Merchant Feeds
-                    <Button
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <h3 className="font-semibold">Active Merchant Feeds</h3>
+                    <Button 
                       onClick={() => syncFeedsMutation.mutate()}
                       disabled={syncFeedsMutation.isPending}
-                      size="sm"
                     >
-                      <RefreshCw className={`w-4 h-4 mr-2 ${syncFeedsMutation.isPending ? 'animate-spin' : ''}`} />
-                      {syncFeedsMutation.isPending ? "Syncing..." : "Sync Now"}
+                      <RefreshCw className="w-4 h-4 mr-2" />
+                      {syncFeedsMutation.isPending ? 'Syncing...' : 'Sync All Feeds'}
                     </Button>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    {merchantFeeds?.map((feed: MerchantFeed) => (
-                      <div key={feed.id} className="flex items-center justify-between p-3 border rounded-lg">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2">
-                            <h4 className="font-medium">{feed.name}</h4>
-                            <Badge variant={feed.isActive ? "default" : "secondary"}>
-                              {feed.isActive ? "Active" : "Inactive"}
-                            </Badge>
-                          </div>
-                          <p className="text-sm text-gray-600 mt-1">{feed.feedUrl}</p>
-                          {feed.lastSyncedAt && (
-                            <p className="text-xs text-gray-500 mt-1">
-                              Last synced: {new Date(feed.lastSyncedAt).toLocaleString()}
-                            </p>
-                          )}
-                        </div>
-                        <Button variant="outline" size="sm">
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    ))}
                   </div>
-                </CardContent>
-              </Card>
-            </div>
+                  
+                  {Array.isArray(merchantFeeds) && merchantFeeds.length > 0 ? (
+                    <div className="grid gap-4">
+                      {merchantFeeds.map((feed: MerchantFeed) => (
+                        <Card key={feed.id} className="p-4">
+                          <div className="flex justify-between items-start">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2 mb-2">
+                                <h4 className="font-medium">{feed.name}</h4>
+                                {feed.isActive && <Badge variant="default">Active</Badge>}
+                              </div>
+                              <p className="text-sm text-gray-600 mb-1">URL: {feed.feedUrl}</p>
+                              <p className="text-sm text-gray-600 mb-1">Sync Interval: {feed.syncInterval / 3600} hours</p>
+                              {feed.lastSyncedAt && (
+                                <p className="text-sm text-gray-500">Last synced: {new Date(feed.lastSyncedAt).toLocaleString()}</p>
+                              )}
+                            </div>
+                            <Button variant="ghost" size="sm">
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </Card>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-gray-500 text-center py-8">No merchant feeds configured. Add a feed to start syncing product data.</p>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
 
-          {/* Upload Content Tab */}
-          <TabsContent value="upload">
+          {/* Analytics Tab */}
+          <TabsContent value="analytics" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Upload Content</CardTitle>
+                <CardTitle>System Analytics</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <p className="text-gray-600">Upload PDFs, documents, or other content to expand the knowledge base.</p>
-                
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-                  <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-600 mb-2">Drag and drop files here, or click to browse</p>
-                  <p className="text-sm text-gray-500">Supported formats: PDF, TXT, DOCX, MD</p>
-                  <Button variant="outline" className="mt-4">
-                    Choose Files
-                  </Button>
+              <CardContent>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="text-center p-4 border rounded-lg">
+                    <div className="text-2xl font-bold text-blue-600">{Array.isArray(knowledgeBase) ? knowledgeBase.length : 0}</div>
+                    <div className="text-sm text-gray-600">Knowledge Entries</div>
+                  </div>
+                  <div className="text-center p-4 border rounded-lg">
+                    <div className="text-2xl font-bold text-green-600">{Array.isArray(merchantFeeds) ? merchantFeeds.length : 0}</div>
+                    <div className="text-sm text-gray-600">Merchant Feeds</div>
+                  </div>
+                  <div className="text-center p-4 border rounded-lg">
+                    <div className="text-2xl font-bold text-purple-600">{aiConfig ? 1 : 0}</div>
+                    <div className="text-sm text-gray-600">AI Providers</div>
+                  </div>
+                  <div className="text-center p-4 border rounded-lg">
+                    <div className="text-2xl font-bold text-orange-600">-</div>
+                    <div className="text-sm text-gray-600">Total Chats</div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
