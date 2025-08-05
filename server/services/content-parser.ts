@@ -2,7 +2,10 @@ import fs from 'fs';
 import path from 'path';
 import * as cheerio from 'cheerio';
 import { parseString } from 'xml2js';
-import { ragService } from './rag-service';
+import { RAGService, enhancedRagService } from './rag-service';
+
+// Create an instance of RAGService or use the enhancedRagService
+const ragService = enhancedRagService; // Use the enhanced RAG service
 
 export interface ParsedContent {
   title: string;
@@ -102,7 +105,7 @@ export class ContentParser {
     metadata: Record<string, any>;
   }> {
     try {
-      const result = await new Promise((resolve, reject) => {
+      const result = await new Promise<any>((resolve, reject) => {
         parseString(xmlContent, {
           explicitArray: false,
           ignoreAttrs: false
@@ -123,12 +126,47 @@ export class ContentParser {
         // Handle different XML structures
         const gNamespace = item['g:'] || item;
         
+        // Debug the structure to find price
+        console.log(`Processing item ${index}:`, 
+          item['g:price'] ? `Has g:price directly: ${item['g:price']}` : 'No direct g:price',
+          gNamespace.price ? `Has gNamespace.price: ${gNamespace.price}` : 'No gNamespace.price');
+        
+        // Try multiple ways to get the price
+        let price = 0;
+        if (item['g:price']) {
+          price = this.parsePrice(item['g:price']);
+          console.log(`Found price in g:price: ${price}`);
+        } else if (gNamespace.price) {
+          price = this.parsePrice(gNamespace.price);
+          console.log(`Found price in gNamespace.price: ${price}`);
+        } else {
+          console.log(`No price found for item ${index}`);
+        }
+        
+        // Try multiple ways to get the image URL
+        let imageUrl = '';
+        if (item['g:image_link']) {
+          imageUrl = item['g:image_link'];
+          console.log(`Found image URL in g:image_link: ${imageUrl}`);
+        } else if (gNamespace.image_link) {
+          imageUrl = gNamespace.image_link;
+          console.log(`Found image URL in gNamespace.image_link: ${imageUrl}`);
+        } else if (item.image_link) {
+          imageUrl = item.image_link;
+          console.log(`Found image URL in item.image_link: ${imageUrl}`);
+        } else if (gNamespace.image) {
+          imageUrl = gNamespace.image;
+          console.log(`Found image URL in gNamespace.image: ${imageUrl}`);
+        } else {
+          console.log(`No image URL found for item ${index}`);
+        }
+        
         return {
           productId: gNamespace.id || gNamespace.product_id || `product_${index}`,
           title: gNamespace.title || item.title || '',
           description: gNamespace.description || item.description || '',
-          price: this.parsePrice(gNamespace.price || item.price),
-          imageUrl: gNamespace.image_link || item.image_link || gNamespace.image || '',
+          price: price,
+          imageUrl: imageUrl,
           productUrl: gNamespace.link || item.link || '',
           category: gNamespace.product_type || item.category || '',
           brand: gNamespace.brand || item.brand || '',

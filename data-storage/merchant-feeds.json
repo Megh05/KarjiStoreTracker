@@ -1,0 +1,12 @@
+[
+  {
+    "id": 2,
+    "name": "karji merchant feed",
+    "feedUrl": "https://www.karjistore.com/userfiles/1-4-0001-mygooglemerchantcenterxmlfeed2.xml",
+    "syncInterval": 10800,
+    "isActive": true,
+    "createdOnUtc": "2025-08-01T16:35:14.673Z",
+    "lastSyncedAt": "2025-08-01T22:42:05.668Z",
+    "updatedOnUtc": "2025-08-01T22:42:05.668Z"
+  }
+]

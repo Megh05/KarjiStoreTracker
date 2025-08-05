@@ -13,16 +13,19 @@ export interface ChatMessageRequest {
 }
 
 export const trackOrder = async (data: TrackOrderRequest): Promise<OrderTrackingData> => {
-  const response = await apiRequest("POST", "/api/track-order", data);
-  return response.json();
+  return await apiRequest("/api/track-order", {
+    method: 'POST',
+    body: JSON.stringify(data)
+  });
 };
 
 export const sendChatMessage = async (data: ChatMessageRequest) => {
-  const response = await apiRequest("POST", "/api/chat/message", data);
-  return response.json();
+  return await apiRequest("/api/chat/message", {
+    method: 'POST',
+    body: JSON.stringify(data)
+  });
 };
 
 export const getChatHistory = async (sessionId: string) => {
-  const response = await apiRequest("GET", `/api/chat/history/${sessionId}`);
-  return response.json();
+  return await apiRequest(`/api/chat/history/${sessionId}`);
 };

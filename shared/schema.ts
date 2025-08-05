@@ -213,9 +213,15 @@ export const ollamaConfigSchema = z.object({
   model: z.string().min(1, "Model name is required"),
 });
 
+export const openRouterConfigSchema = z.object({
+  // Accept any string as API key with no validation whatsoever
+  apiKey: z.any(),
+  model: z.string().min(1, "Model name is required"),
+});
+
 export const aiProviderConfigSchema = z.object({
-  provider: z.enum(["azure", "ollama"]),
-  config: z.union([azureConfigSchema, ollamaConfigSchema]),
+  provider: z.enum(["azure", "ollama", "openrouter"]),
+  config: z.union([azureConfigSchema, ollamaConfigSchema, openRouterConfigSchema]),
   customInstructions: z.string().optional(),
 });
 
@@ -234,4 +240,21 @@ export type MerchantFeed = typeof merchantFeeds.$inferSelect;
 
 export type AzureConfig = z.infer<typeof azureConfigSchema>;
 export type OllamaConfig = z.infer<typeof ollamaConfigSchema>;
+export type OpenRouterConfig = z.infer<typeof openRouterConfigSchema>;
 export type AiProviderConfig = z.infer<typeof aiProviderConfigSchema>;
+
+export interface ChatState {
+  awaitingEmail: boolean;
+  awaitingOrderId: boolean;
+  awaitingProductPreference?: boolean;
+  productPreferenceStep?: 'category' | 'budget' | 'features' | 'sort';
+  email?: string;
+  orderId?: string;
+  productPreferences?: {
+    category?: string;
+    budget?: string;
+    features?: string[];
+    sort?: 'price_low' | 'price_high' | 'popularity';
+    searchQuery?: string; // Added for custom search
+  };
+}

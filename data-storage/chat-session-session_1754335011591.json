@@ -1,0 +1,22 @@
+[
+  {
+    "content": "hi",
+    "isBot": false,
+    "timestamp": "2025-08-04T19:16:55.899Z"
+  },
+  {
+    "content": "Hi there! Welcome to KarjiStore. How can I assist you today? Are you looking for something specific or just browsing?",
+    "isBot": true,
+    "timestamp": "2025-08-04T19:16:55.903Z"
+  },
+  {
+    "content": "hi",
+    "isBot": false,
+    "timestamp": "2025-08-04T19:16:55.913Z"
+  },
+  {
+    "content": "Hi there! Welcome to KarjiStore. How can I assist you today? Are you looking for something specific or just browsing?",
+    "isBot": true,
+    "timestamp": "2025-08-04T19:16:55.913Z"
+  }
+]

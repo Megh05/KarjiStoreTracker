@@ -1,0 +1,122 @@
+[
+  {
+    "sessionId": "session_1754330025487",
+    "query": "most expesnive product",
+    "responseTime": 3287,
+    "productsShown": 5,
+    "productsClicked": 0,
+    "searchRefinementCount": 0,
+    "scoringWeights": {
+      "semantic": 0.25,
+      "contextual": 0.2,
+      "business": 0.15,
+      "behavioral": 0.15,
+      "temporal": 0.1,
+      "availability": 0.1,
+      "quality": 0.03,
+      "price": 0.02
+    },
+    "finalScore": 0.53,
+    "timestamp": "2025-08-04T17:53:48.998Z"
+  },
+  {
+    "sessionId": "session_1754330058502",
+    "query": "perfumes",
+    "responseTime": 2556,
+    "productsShown": 5,
+    "productsClicked": 0,
+    "searchRefinementCount": 0,
+    "scoringWeights": {
+      "semantic": 0.25,
+      "contextual": 0.2,
+      "business": 0.15,
+      "behavioral": 0.15,
+      "temporal": 0.1,
+      "availability": 0.1,
+      "quality": 0.03,
+      "price": 0.02
+    },
+    "finalScore": 1,
+    "timestamp": "2025-08-04T17:54:21.073Z"
+  },
+  {
+    "sessionId": "session_1754330071434",
+    "query": "floral",
+    "responseTime": 2587,
+    "productsShown": 0,
+    "productsClicked": 0,
+    "searchRefinementCount": 0,
+    "scoringWeights": {
+      "semantic": 0.25,
+      "contextual": 0.2,
+      "business": 0.15,
+      "behavioral": 0.15,
+      "temporal": 0.1,
+      "availability": 0.1,
+      "quality": 0.03,
+      "price": 0.02
+    },
+    "finalScore": 1,
+    "timestamp": "2025-08-04T17:54:34.037Z"
+  },
+  {
+    "sessionId": "session_1754330084569",
+    "query": "floral perfumes",
+    "responseTime": 2517,
+    "productsShown": 5,
+    "productsClicked": 0,
+    "searchRefinementCount": 0,
+    "scoringWeights": {
+      "semantic": 0.25,
+      "contextual": 0.2,
+      "business": 0.15,
+      "behavioral": 0.15,
+      "temporal": 0.1,
+      "availability": 0.1,
+      "quality": 0.03,
+      "price": 0.02
+    },
+    "finalScore": 0.96,
+    "timestamp": "2025-08-04T17:54:47.099Z"
+  },
+  {
+    "sessionId": "session_1754330190865",
+    "query": "men watches under 1500 dihrams",
+    "responseTime": 2757,
+    "productsShown": 5,
+    "productsClicked": 0,
+    "searchRefinementCount": 0,
+    "scoringWeights": {
+      "semantic": 0.25,
+      "contextual": 0.2,
+      "business": 0.15,
+      "behavioral": 0.15,
+      "temporal": 0.1,
+      "availability": 0.1,
+      "quality": 0.03,
+      "price": 0.02
+    },
+    "finalScore": 0.58,
+    "timestamp": "2025-08-04T17:56:33.636Z"
+  },
+  {
+    "sessionId": "session_1754330217000",
+    "query": "men watches under 1500 dihrams",
+    "responseTime": 2870,
+    "productsShown": 5,
+    "productsClicked": 0,
+    "searchRefinementCount": 0,
+    "scoringWeights": {
+      "semantic": 0.25,
+      "contextual": 0.2,
+      "business": 0.15,
+      "behavioral": 0.15,
+      "temporal": 0.1,
+      "availability": 0.1,
+      "quality": 0.03,
+      "price": 0.02
+    },
+    "finalScore": 0.58,
+    "timestamp": "2025-08-04T17:56:59.885Z"
+  }
+]

@@ -1,0 +1,188 @@
+{
+  "session_1754330025487": {
+    "sessionId": "session_1754330025487",
+    "startTime": "2025-08-04T17:53:48.983Z",
+    "lastActivity": "2025-08-04T17:53:48.984Z",
+    "conversationHistory": [
+      {
+        "role": "user",
+        "content": "most expesnive product",
+        "timestamp": "2025-08-04T17:53:48.983Z"
+      },
+      {
+        "role": "assistant",
+        "content": "Thank you for your interest in our premium products! I'm displaying some of our most expensive items below. These products are known for their exceptional quality and luxury.\n\nTo help you find the perfect fit, could you please tell me more about what you're looking for? Are you interested in a specific category like electronics, jewelry, or fashion?",
+        "timestamp": "2025-08-04T17:53:48.984Z"
+      }
+    ],
+    "userPreferences": {},
+    "behaviorData": {
+      "clickThroughRate": 0,
+      "dwellTime": 0,
+      "cartAbandonmentRate": 0,
+      "purchaseHistory": [],
+      "viewedProducts": [],
+      "searchQueries": []
+    },
+    "performanceMetrics": {
+      "totalInteractions": 2,
+      "successfulConversations": 0,
+      "averageResponseTime": 0
+    }
+  },
+  "session_1754330058502": {
+    "sessionId": "session_1754330058502",
+    "startTime": "2025-08-04T17:54:21.070Z",
+    "lastActivity": "2025-08-04T17:54:21.071Z",
+    "conversationHistory": [
+      {
+        "role": "user",
+        "content": "perfumes",
+        "timestamp": "2025-08-04T17:54:21.070Z"
+      },
+      {
+        "role": "assistant",
+        "content": "That's a wonderful selection! We have a variety of perfumes in our collection. I'm showing you some options below.\n\nTo help you find the perfect scent, could you tell me if you have a specific type or brand in mind?",
+        "timestamp": "2025-08-04T17:54:21.071Z"
+      }
+    ],
+    "userPreferences": {},
+    "behaviorData": {
+      "clickThroughRate": 0,
+      "dwellTime": 0,
+      "cartAbandonmentRate": 0,
+      "purchaseHistory": [],
+      "viewedProducts": [],
+      "searchQueries": []
+    },
+    "performanceMetrics": {
+      "totalInteractions": 2,
+      "successfulConversations": 0,
+      "averageResponseTime": 0
+    }
+  },
+  "session_1754330071434": {
+    "sessionId": "session_1754330071434",
+    "startTime": "2025-08-04T17:54:34.033Z",
+    "lastActivity": "2025-08-04T17:54:34.036Z",
+    "conversationHistory": [
+      {
+        "role": "user",
+        "content": "floral",
+        "timestamp": "2025-08-04T17:54:34.033Z"
+      },
+      {
+        "role": "assistant",
+        "content": "That's a lovely choice! Floral items can really brighten up any space or outfit. I'm showing you some relevant products below. Do you have a specific type of floral item in mind, like home decor, clothing, or something else?",
+        "timestamp": "2025-08-04T17:54:34.036Z"
+      }
+    ],
+    "userPreferences": {},
+    "behaviorData": {
+      "clickThroughRate": 0,
+      "dwellTime": 0,
+      "cartAbandonmentRate": 0,
+      "purchaseHistory": [],
+      "viewedProducts": [],
+      "searchQueries": []
+    },
+    "performanceMetrics": {
+      "totalInteractions": 2,
+      "successfulConversations": 0,
+      "averageResponseTime": 0
+    }
+  },
+  "session_1754330084569": {
+    "sessionId": "session_1754330084569",
+    "startTime": "2025-08-04T17:54:47.091Z",
+    "lastActivity": "2025-08-04T17:54:47.091Z",
+    "conversationHistory": [
+      {
+        "role": "user",
+        "content": "floral perfumes",
+        "timestamp": "2025-08-04T17:54:47.091Z"
+      },
+      {
+        "role": "assistant",
+        "content": "That sounds lovely! We have a wonderful selection of floral perfumes. I'm showing you some options below. Do you have a specific occasion in mind for the perfume, or is there a particular floral scent you prefer?",
+        "timestamp": "2025-08-04T17:54:47.091Z"
+      }
+    ],
+    "userPreferences": {},
+    "behaviorData": {
+      "clickThroughRate": 0,
+      "dwellTime": 0,
+      "cartAbandonmentRate": 0,
+      "purchaseHistory": [],
+      "viewedProducts": [],
+      "searchQueries": []
+    },
+    "performanceMetrics": {
+      "totalInteractions": 2,
+      "successfulConversations": 0,
+      "averageResponseTime": 0
+    }
+  },
+  "session_1754330190865": {
+    "sessionId": "session_1754330190865",
+    "startTime": "2025-08-04T17:56:33.631Z",
+    "lastActivity": "2025-08-04T17:56:33.632Z",
+    "conversationHistory": [
+      {
+        "role": "user",
+        "content": "men watches under 1500 dihrams",
+        "timestamp": "2025-08-04T17:56:33.631Z"
+      },
+      {
+        "role": "assistant",
+        "content": "Great choice! We have a variety of men's watches under 1500 dirhams. I'm showing you some options below.\n\nTo help you find the perfect one, do you have a specific style or brand in mind?",
+        "timestamp": "2025-08-04T17:56:33.632Z"
+      }
+    ],
+    "userPreferences": {},
+    "behaviorData": {
+      "clickThroughRate": 0,
+      "dwellTime": 0,
+      "cartAbandonmentRate": 0,
+      "purchaseHistory": [],
+      "viewedProducts": [],
+      "searchQueries": []
+    },
+    "performanceMetrics": {
+      "totalInteractions": 2,
+      "successfulConversations": 0,
+      "averageResponseTime": 0
+    }
+  },
+  "session_1754330217000": {
+    "sessionId": "session_1754330217000",
+    "startTime": "2025-08-04T17:56:59.883Z",
+    "lastActivity": "2025-08-04T17:56:59.884Z",
+    "conversationHistory": [
+      {
+        "role": "user",
+        "content": "men watches under 1500 dihrams",
+        "timestamp": "2025-08-04T17:56:59.883Z"
+      },
+      {
+        "role": "assistant",
+        "content": "Perfect! I see you're interested in men's watches under 1500 dirhams. I'm showing you some great options below.\n\nTo help you find the perfect one, do you have a specific style or brand in mind?",
+        "timestamp": "2025-08-04T17:56:59.884Z"
+      }
+    ],
+    "userPreferences": {},
+    "behaviorData": {
+      "clickThroughRate": 0,
+      "dwellTime": 0,
+      "cartAbandonmentRate": 0,
+      "purchaseHistory": [],
+      "viewedProducts": [],
+      "searchQueries": []
+    },
+    "performanceMetrics": {
+      "totalInteractions": 2,
+      "successfulConversations": 0,
+      "averageResponseTime": 0
+    }
+  }
+}

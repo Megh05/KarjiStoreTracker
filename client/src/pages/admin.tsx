@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,12 +9,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { Settings, Bot, Database, Upload, RefreshCw, ExternalLink, Plus, Trash2 } from "lucide-react";
+import { Settings, Bot, Database, Upload, RefreshCw, ExternalLink, Plus, Trash2, Globe } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
+
+// Default Ollama endpoint
+const DEFAULT_OLLAMA_ENDPOINT = 'http://127.0.0.1:11434';
 
 interface AiConfig {
   id: number;
-  provider: 'azure' | 'ollama';
+  provider: 'azure' | 'ollama' | 'openrouter';
   config: any;
   customInstructions?: string;
   isActive: boolean;
@@ -42,8 +45,9 @@ interface MerchantFeed {
 export default function AdminDashboard() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const [selectedProvider, setSelectedProvider] = useState<'azure' | 'ollama'>('azure');
+  const [selectedProvider, setSelectedProvider] = useState<'azure' | 'ollama' | 'openrouter'>('azure');
   const [customInstructions, setCustomInstructions] = useState('');
+  const apiKeyManuallySetRef = useRef(false);
 
   // AI Configuration Form States
   const [azureConfig, setAzureConfig] = useState({
@@ -54,9 +58,27 @@ export default function AdminDashboard() {
   });
 
   const [ollamaConfig, setOllamaConfig] = useState({
-    endpoint: 'http://localhost:11434',
+    endpoint: DEFAULT_OLLAMA_ENDPOINT,
     model: ''
   });
+
+  const [openRouterConfig, setOpenRouterConfig] = useState({
+    apiKey: '',
+    model: ''
+  });
+  
+  // Custom handler for OpenRouter API key changes
+  const handleOpenRouterApiKeyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    apiKeyManuallySetRef.current = true;
+    // Don't trim the API key - preserve user input exactly as entered
+    const apiKey = e.target.value;
+    console.log('OpenRouter API key changed:', {
+      newValue: apiKey ? `${apiKey.substring(0, 10)}...` : 'empty',
+      length: apiKey ? apiKey.length : 0,
+      fullValue: apiKey // Log the full value for debugging
+    });
+    setOpenRouterConfig({ ...openRouterConfig, apiKey });
+  };
 
   // Knowledge Base Form States
   const [newKnowledge, setNewKnowledge] = useState({
@@ -82,8 +104,15 @@ export default function AdminDashboard() {
   // Query for Ollama models
   const { data: ollamaModels = [], refetch: refetchModels } = useQuery({
     queryKey: ['/api/admin/ollama-models'],
-    queryFn: () => apiRequest('/api/admin/ollama-models'),
+    queryFn: () => apiRequest(`/api/admin/ollama-models?endpoint=${encodeURIComponent(ollamaConfig.endpoint)}`),
     enabled: selectedProvider === 'ollama'
+  });
+
+  // Query for OpenRouter models
+  const { data: openRouterModels = [], refetch: refetchOpenRouterModels } = useQuery({
+    queryKey: ['/api/admin/openrouter-models', openRouterConfig.apiKey],
+    queryFn: () => apiRequest(`/api/admin/openrouter-models?apiKey=${encodeURIComponent(openRouterConfig.apiKey)}`),
+    enabled: selectedProvider === 'openrouter' && !!openRouterConfig.apiKey && openRouterConfig.apiKey.length > 0
   });
 
   // Query for knowledge base
@@ -106,14 +135,32 @@ export default function AdminDashboard() {
     }),
     onSuccess: () => {
       toast({ title: "AI Configuration saved successfully!" });
+      // Force refresh the AI config query to get the updated data
       queryClient.invalidateQueries({ queryKey: ['/api/admin/ai-config'] });
+      // Reset the manual flag after successful save
+      apiKeyManuallySetRef.current = false;
     },
     onError: (error: any) => {
-      toast({ 
-        title: "Failed to save AI configuration",
-        description: error.message,
-        variant: "destructive"
-      });
+      // Check if this is an API key validation error
+      const errorData = error.data || {};
+      const details = errorData.details || [];
+      const apiKeyError = details.find((detail: any) => 
+        detail.path && detail.path.includes('apiKey')
+      );
+      
+      if (apiKeyError) {
+        toast({ 
+          title: "API Key Error",
+          description: apiKeyError.message || "Please provide a valid API key",
+          variant: "destructive"
+        });
+      } else {
+        toast({ 
+          title: "Failed to save AI configuration",
+          description: error.message,
+          variant: "destructive"
+        });
+      }
     }
   });
 
@@ -187,6 +234,21 @@ export default function AdminDashboard() {
     }
   });
 
+  const deleteMerchantFeedMutation = useMutation({
+    mutationFn: (feedId: number) => apiRequest(`/api/admin/merchant-feeds/${feedId}`, { method: 'DELETE' }),
+    onSuccess: () => {
+      toast({ title: "Merchant feed deleted successfully!" });
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/merchant-feeds'] });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Failed to delete merchant feed",
+        description: error.message,
+        variant: "destructive"
+      });
+    }
+  });
+
   // Load current config
   useEffect(() => {
     if (aiConfig) {
@@ -197,30 +259,188 @@ export default function AdminDashboard() {
         setAzureConfig(aiConfig.config);
       } else if (aiConfig.provider === 'ollama' && aiConfig.config) {
         setOllamaConfig(aiConfig.config);
+      } else if (aiConfig.provider === 'openrouter' && aiConfig.config) {
+        // Fix legacy OpenRouter config if needed
+        const config = { ...aiConfig.config };
+        
+        // Check if the config has the wrong structure (endpoint instead of apiKey)
+        if (config.endpoint && !config.apiKey) {
+          console.warn('Found legacy OpenRouter config with incorrect fields, fixing in UI');
+          config.apiKey = '';
+          delete config.endpoint;
+        }
+        
+        // Always update the config from server when it's loaded
+        // Reset the manual flag when loading new config from server
+        apiKeyManuallySetRef.current = false;
+        console.log('Loading OpenRouter config from server:', {
+          apiKey: config.apiKey ? `${config.apiKey.substring(0, 10)}...` : 'empty',
+          apiKeyLength: config.apiKey ? config.apiKey.length : 0,
+          model: config.model
+        });
+        setOpenRouterConfig(config);
       }
     }
   }, [aiConfig]);
 
   const handleSaveAiConfig = () => {
+    let configToSave;
+    
+    if (selectedProvider === 'azure') {
+      configToSave = azureConfig;
+    } else if (selectedProvider === 'ollama') {
+      configToSave = ollamaConfig;
+    } else if (selectedProvider === 'openrouter') {
+      // Create a clean copy of the OpenRouter config
+      const cleanConfig = { ...openRouterConfig } as any;
+      
+      console.log("Original OpenRouter config:", JSON.stringify({
+        apiKey: cleanConfig.apiKey ? 'API_KEY_EXISTS' : 'NO_API_KEY',
+        model: cleanConfig.model,
+        endpoint: cleanConfig.endpoint
+      }));
+      
+      // Make sure we're using the correct format (apiKey, not endpoint)
+      // This is critical to ensure the API key is saved correctly
+      if (cleanConfig.endpoint) {
+        console.warn("Converting legacy OpenRouter config format for save - removing endpoint");
+        delete cleanConfig.endpoint;
+      }
+      
+      // Ensure the API key is included and preserve user input
+      if (cleanConfig.apiKey === undefined) {
+        cleanConfig.apiKey = "";
+      }
+      
+      // Don't allow placeholder values to be saved
+      if (cleanConfig.apiKey === 'PLEASE_ADD_YOUR_API_KEY' || 
+          cleanConfig.apiKey === 'PLEASE_UPDATE_YOUR_API_KEY' || 
+          cleanConfig.apiKey === 'PLEASE_UPDATE_API_KEY') {
+        cleanConfig.apiKey = "";
+      }
+      
+      // Preserve the user's actual API key input
+      console.log("User's API key input:", cleanConfig.apiKey ? `${cleanConfig.apiKey.substring(0, 5)}...` : 'empty');
+      
+      console.log("Final OpenRouter config to save:", JSON.stringify({
+        apiKey: cleanConfig.apiKey ? 'API_KEY_EXISTS' : 'NO_API_KEY',
+        model: cleanConfig.model
+      }));
+      configToSave = cleanConfig;
+    }
+    
     const config = {
       provider: selectedProvider,
-      config: selectedProvider === 'azure' ? azureConfig : ollamaConfig,
+      config: configToSave,
       customInstructions
     };
+    
+    console.log("Saving configuration:", JSON.stringify({
+      provider: config.provider,
+      config: selectedProvider === 'openrouter' ? {
+        apiKey: configToSave.apiKey ? 'API_KEY_EXISTS' : 'NO_API_KEY',
+        model: configToSave.model
+      } : '...',
+      customInstructions: config.customInstructions ? 'present' : 'none'
+    }));
+    
+    // Log the actual config being sent (without revealing the full API key)
+    if (selectedProvider === 'openrouter') {
+      console.log("Actual OpenRouter config being sent:", {
+        apiKey: configToSave.apiKey ? `${configToSave.apiKey.substring(0, 10)}...` : 'empty',
+        apiKeyLength: configToSave.apiKey ? configToSave.apiKey.length : 0,
+        apiKeyFullValue: configToSave.apiKey, // Log the full value for debugging
+        model: configToSave.model
+      });
+    }
+    
     saveAiConfigMutation.mutate(config);
   };
 
   const handleTestConnection = () => {
+    // Validate configuration based on provider
+    if (selectedProvider === 'azure') {
+      if (!azureConfig.endpoint || !azureConfig.apiKey || !azureConfig.deploymentName) {
+        toast({
+          title: "Missing configuration",
+          description: "Please enter all required Azure fields: Endpoint URL, API Key, and Deployment Name",
+          variant: "destructive"
+        });
+        return;
+      }
+    } else if (selectedProvider === 'ollama') {
+      if (!ollamaConfig.endpoint || !ollamaConfig.model) {
+        toast({
+          title: "Missing configuration",
+          description: "Please enter all required Ollama fields: Endpoint URL and Model",
+          variant: "destructive"
+        });
+        return;
+      }
+    } else if (selectedProvider === 'openrouter') {
+      console.log("OpenRouter config before test:", JSON.stringify(openRouterConfig));
+      
+      // Create a copy of the config to ensure we don't modify the state directly
+      const testConfig = { ...openRouterConfig } as any;
+      
+      // Handle legacy format (endpoint instead of apiKey)
+      if (testConfig.endpoint && !testConfig.apiKey) {
+        console.warn("Converting legacy OpenRouter config format for test");
+        testConfig.apiKey = "PLEASE_UPDATE_API_KEY";
+        delete testConfig.endpoint;
+      }
+      
+      if (!testConfig.apiKey || !testConfig.model) {
+        toast({
+          title: "Missing configuration",
+          description: "Please enter all required OpenRouter fields: API Key and Model",
+          variant: "destructive"
+        });
+        return;
+      }
+      
+      const config = {
+        provider: selectedProvider,
+        config: testConfig
+      };
+      
+      console.log("Testing connection with config:", JSON.stringify(config));
+      testConnectionMutation.mutate(config);
+      return;
+    }
+
     const config = {
       provider: selectedProvider,
-      config: selectedProvider === 'azure' ? azureConfig : ollamaConfig
+      config: selectedProvider === 'azure' 
+        ? azureConfig 
+        : selectedProvider === 'ollama' 
+          ? ollamaConfig 
+          : openRouterConfig
     };
+    
+    console.log("Testing connection with config:", JSON.stringify(config));
     testConnectionMutation.mutate(config);
   };
 
   const handleRefreshModels = () => {
-    refetchModels();
-    toast({ title: "Refreshing available models..." });
+    if (selectedProvider === 'ollama') {
+      refetchModels();
+      toast({ title: "Refreshing Ollama models..." });
+    } else if (selectedProvider === 'openrouter' && !!openRouterConfig.apiKey) {
+      refetchOpenRouterModels();
+      toast({ title: "Refreshing OpenRouter models..." });
+    }
+  };
+
+  const handleSaveButtonClick = () => {
+    console.log("Save Configuration button clicked");
+    console.log("Current OpenRouter config:", {
+      apiKey: openRouterConfig.apiKey ? `${openRouterConfig.apiKey.substring(0, 10)}...` : undefined,
+      apiKeyLength: openRouterConfig.apiKey ? openRouterConfig.apiKey.length : 0,
+      model: openRouterConfig.model,
+      apiKeyManuallySet: apiKeyManuallySetRef.current
+    });
+    handleSaveAiConfig();
   };
 
   return (
@@ -267,13 +487,14 @@ export default function AdminDashboard() {
                 <div className="space-y-4">
                   <div>
                     <Label htmlFor="provider">AI Provider</Label>
-                    <Select value={selectedProvider} onValueChange={(value: 'azure' | 'ollama') => setSelectedProvider(value)}>
+                    <Select value={selectedProvider} onValueChange={(value: 'azure' | 'ollama' | 'openrouter') => setSelectedProvider(value)}>
                       <SelectTrigger>
                         <SelectValue placeholder="Select AI Provider" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="azure">Azure OpenAI</SelectItem>
                         <SelectItem value="ollama">Ollama (Local)</SelectItem>
+                        <SelectItem value="openrouter">OpenRouter</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -365,6 +586,97 @@ export default function AdminDashboard() {
                     </div>
                   )}
 
+                  {selectedProvider === 'openrouter' && (
+                    <div className="space-y-4 p-4 border rounded-lg bg-purple-50">
+                      <div className="flex justify-between items-center">
+                        <h3 className="font-semibold text-purple-900">OpenRouter Configuration</h3>
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          onClick={handleRefreshModels}
+                          disabled={!openRouterConfig.apiKey}
+                        >
+                          <RefreshCw className="w-4 h-4 mr-2" />
+                          Refresh Models
+                        </Button>
+                      </div>
+                      <div>
+                        <Label htmlFor="openrouter-key" className="flex items-center">
+                          API Key <span className="text-red-500 ml-1">*</span>
+                        </Label>
+                        <Input
+                          id="openrouter-key"
+                          type="password"
+                          placeholder="Your OpenRouter API key"
+                          value={openRouterConfig.apiKey || ''}
+                          onChange={handleOpenRouterApiKeyChange}
+                          className=""
+                        />
+                        {(openRouterConfig.apiKey === 'PLEASE_UPDATE_YOUR_API_KEY' || openRouterConfig.apiKey === 'PLEASE_UPDATE_API_KEY') && (
+                          <p className="mt-1 text-xs text-amber-600">
+                            You are using a placeholder API key. Please replace it with your actual OpenRouter API key.
+                          </p>
+                        )}
+                        <div className="mt-1 text-xs text-gray-500 flex items-center">
+                          <Globe className="w-3 h-3 mr-1" />
+                          <a 
+                            href="https://openrouter.ai/keys" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-purple-600 hover:underline"
+                          >
+                            Get an API key from OpenRouter
+                          </a>
+                        </div>
+                      </div>
+                      <div>
+                        <Label htmlFor="openrouter-model" className="flex items-center">
+                          Model <span className="text-red-500 ml-1">*</span>
+                        </Label>
+                        <Select 
+                          value={openRouterConfig.model || ''} 
+                          onValueChange={(value) => setOpenRouterConfig({ ...openRouterConfig, model: value })}
+                          disabled={!openRouterConfig.apiKey || !Array.isArray(openRouterModels) || openRouterModels.length === 0}
+                        >
+                          <SelectTrigger className={!openRouterConfig.model ? "border-red-300" : ""}>
+                            <SelectValue placeholder={openRouterConfig.apiKey ? "Select model" : "Enter API key first"} />
+                          </SelectTrigger>
+                          <SelectContent className="max-h-[300px]">
+                            {Array.isArray(openRouterModels) && openRouterModels.length > 0 ? (
+                              openRouterModels.map((model: any) => (
+                                <SelectItem key={model.id} value={model.id}>
+                                  {model.name || model.id}
+                                </SelectItem>
+                              ))
+                            ) : (
+                              <SelectItem value="no-models" disabled>
+                                {openRouterConfig.apiKey ? "No models available" : "Enter API key first"}
+                              </SelectItem>
+                            )}
+                          </SelectContent>
+                        </Select>
+                        {!openRouterConfig.model && openRouterConfig.apiKey && (
+                          <p className="mt-1 text-xs text-red-500">Please select a model</p>
+                        )}
+                      </div>
+                      <div className="text-sm text-gray-600 mt-2 p-2 bg-purple-100 rounded">
+                        <p><strong>Note:</strong> Both API Key and Model selection are required for OpenRouter integration.</p>
+                      </div>
+                      
+                      <div className="mt-2">
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={handleTestConnection}
+                          disabled={!openRouterConfig.apiKey || !openRouterConfig.model || testConnectionMutation.isPending}
+                          className="w-full"
+                        >
+                          {testConnectionMutation.isPending ? 'Testing...' : 'Test OpenRouter Connection'}
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+
                   <div>
                     <Label htmlFor="custom-instructions">Custom Instructions</Label>
                     <Textarea
@@ -377,10 +689,19 @@ export default function AdminDashboard() {
                   </div>
 
                   <div className="flex gap-2">
-                    <Button onClick={handleSaveAiConfig} disabled={saveAiConfigMutation.isPending}>
+                    <Button onClick={handleSaveButtonClick} disabled={saveAiConfigMutation.isPending}>
                       {saveAiConfigMutation.isPending ? 'Saving...' : 'Save Configuration'}
                     </Button>
-                    <Button variant="outline" onClick={handleTestConnection} disabled={testConnectionMutation.isPending}>
+                    <Button 
+                      variant="outline" 
+                      onClick={handleTestConnection} 
+                      disabled={
+                        testConnectionMutation.isPending || 
+                        (selectedProvider === 'azure' && (!azureConfig.endpoint || !azureConfig.apiKey || !azureConfig.deploymentName)) ||
+                        (selectedProvider === 'ollama' && (!ollamaConfig.endpoint || !ollamaConfig.model)) ||
+                        (selectedProvider === 'openrouter' && (!openRouterConfig.apiKey || !openRouterConfig.model))
+                      }
+                    >
                       {testConnectionMutation.isPending ? 'Testing...' : 'Test Connection'}
                     </Button>
                   </div>
@@ -569,7 +890,12 @@ export default function AdminDashboard() {
                                 <p className="text-sm text-gray-500">Last synced: {new Date(feed.lastSyncedAt).toLocaleString()}</p>
                               )}
                             </div>
-                            <Button variant="ghost" size="sm">
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              onClick={() => deleteMerchantFeedMutation.mutate(feed.id)}
+                              disabled={deleteMerchantFeedMutation.isPending}
+                            >
                               <Trash2 className="w-4 h-4" />
                             </Button>
                           </div>

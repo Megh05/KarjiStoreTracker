@@ -1,0 +1,22 @@
+[
+  {
+    "content": "suggest me perfumes in price range 100-300 aed",
+    "isBot": false,
+    "timestamp": "2025-08-04T17:19:57.046Z"
+  },
+  {
+    "content": "Great! Let's find the perfect perfume for you within the 100-300 AED range. Could you please specify if you prefer a specific scent type, like floral, woody, or fresh?",
+    "isBot": true,
+    "timestamp": "2025-08-04T17:19:57.047Z"
+  },
+  {
+    "content": "suggest me perfumes in price range 100-300 aed",
+    "isBot": false,
+    "timestamp": "2025-08-04T17:19:57.048Z"
+  },
+  {
+    "content": "Great! Let's find the perfect perfume for you within the 100-300 AED range. Could you please specify if you prefer a specific scent type, like floral, woody, or fresh?",
+    "isBot": true,
+    "timestamp": "2025-08-04T17:19:57.048Z"
+  }
+]

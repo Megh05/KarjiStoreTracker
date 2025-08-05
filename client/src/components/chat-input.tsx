@@ -12,7 +12,7 @@ interface ChatInputProps {
 export default function ChatInput({ 
   onSendMessage, 
   disabled = false, 
-  placeholder = "Type your message..." 
+  placeholder = "Share your luxury preferences..." 
 }: ChatInputProps) {
   const [message, setMessage] = useState("");
 
@@ -32,9 +32,9 @@ export default function ChatInput({
   };
 
   return (
-    <div className="border-t border-neutral-100 bg-white p-4">
+    <div className="p-4 bg-white rounded-b-3xl border-t border-gray-100">
       <form onSubmit={handleSubmit} className="flex items-center space-x-3">
-        <div className="flex-1">
+        <div className="flex-1 relative">
           <Input
             type="text"
             value={message}
@@ -42,15 +42,15 @@ export default function ChatInput({
             onKeyPress={handleKeyPress}
             placeholder={placeholder}
             disabled={disabled}
-            className="w-full px-4 py-3 rounded-xl border border-neutral-200 focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-6 py-4 text-sm text-gray-800 focus:ring-2 focus:ring-amber-400 focus:border-amber-400 shadow-sm outline-none transition-colors"
           />
         </div>
         <Button
           type="submit"
           disabled={disabled || !message.trim()}
-          className="px-6 py-3 bg-primary text-white rounded-xl hover:bg-blue-600 transition-colors duration-200 flex items-center space-x-2 disabled:bg-neutral-300 disabled:cursor-not-allowed"
+          className="bg-gradient-to-br from-amber-600 via-yellow-600 to-amber-700 hover:from-amber-500 hover:via-yellow-500 hover:to-amber-600 disabled:from-gray-300 disabled:via-gray-300 disabled:to-gray-300 text-white w-12 h-12 rounded-2xl p-0 transition-all duration-300 hover:scale-105 shadow-md disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center"
         >
-          <Send className="w-4 h-4" />
+          <Send className="h-5 w-5" />
         </Button>
       </form>
     </div>

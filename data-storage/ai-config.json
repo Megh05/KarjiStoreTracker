@@ -1,0 +1,13 @@
+{
+  "id": 1,
+  "provider": "openrouter",
+  "config": {
+    "endpoint": "http://localhost:11434",
+    "model": "mistralai/mistral-large-2411",
+    "apiKey": "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"
+  },
+  "customInstructions": "Test custom instructions",
+  "isActive": true,
+  "createdOnUtc": "2025-08-03T03:22:15.875Z",
+  "updatedOnUtc": "2025-08-04T17:19:28.940Z"
+}

@@ -1,0 +1,65 @@
+/* Karjistore Chatbot Custom Animations */
+
+@keyframes karjistore-bounce {
+  0%, 20%, 53%, 80%, 100% {
+    transform: translate3d(0,0,0);
+  }
+  40%, 43% {
+    transform: translate3d(0, -30px, 0);
+  }
+  70% {
+    transform: translate3d(0, -15px, 0);
+  }
+  90% {
+    transform: translate3d(0, -4px, 0);
+  }
+}
+
+@keyframes karjistore-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .5;
+  }
+}
+
+.karjistore-chat .animate-bounce {
+  animation: karjistore-bounce 1.4s ease-in-out infinite;
+}
+
+.karjistore-chat .delay-100 {
+  animation-delay: 0.1s;
+}
+
+.karjistore-chat .delay-200 {
+  animation-delay: 0.2s;
+}
+
+.karjistore-chat .animate-pulse {
+  animation: karjistore-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Optional: Smooth transitions for the chat window */
+.karjistore-chat {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Optional: Custom scrollbar for webkit browsers */
+.karjistore-chat .overflow-y-auto::-webkit-scrollbar {
+  width: 6px;
+}
+
+.karjistore-chat .overflow-y-auto::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.karjistore-chat .overflow-y-auto::-webkit-scrollbar-thumb {
+  background: #d4af37;
+  border-radius: 3px;
+}
+
+.karjistore-chat .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: #b8941f;
+} 

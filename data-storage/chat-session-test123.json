@@ -1,0 +1,14 @@
+{
+  "messages": [
+    {
+      "content": "Do you have any watches?",
+      "isBot": false,
+      "timestamp": "2025-08-02T03:13:14.728Z"
+    },
+    {
+      "content": "I'm sorry, but it seems we currently don't have any watches listed in our inventory. We specialize in perfumes, accessories, and makeup. If you're looking for any of these items or need further assistance, feel free to let me know!",
+      "isBot": true,
+      "timestamp": "2025-08-02T03:13:14.728Z"
+    }
+  ]
+}

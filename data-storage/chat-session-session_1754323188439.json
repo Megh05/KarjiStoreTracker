@@ -1,0 +1,22 @@
+[
+  {
+    "content": "show me more",
+    "isBot": false,
+    "timestamp": "2025-08-04T15:59:58.929Z"
+  },
+  {
+    "content": "Could you please specify what exactly you would like to see more of? Our products, store locations, or something else? I'm here to help!",
+    "isBot": true,
+    "timestamp": "2025-08-04T15:59:58.931Z"
+  },
+  {
+    "content": "show me more",
+    "isBot": false,
+    "timestamp": "2025-08-04T15:59:58.939Z"
+  },
+  {
+    "content": "Could you please specify what exactly you would like to see more of? Our products, store locations, or something else? I'm here to help!",
+    "isBot": true,
+    "timestamp": "2025-08-04T15:59:58.939Z"
+  }
+]
