@@ -1,0 +1,32 @@
+[
+  {
+    "content": "hi",
+    "isBot": false,
+    "timestamp": "2025-08-06T21:08:54.173Z"
+  },
+  {
+    "content": "Hello there! How can I assist you today? 😊",
+    "isBot": true,
+    "timestamp": "2025-08-06T21:08:54.174Z"
+  },
+  {
+    "content": "suggest me perfume",
+    "isBot": false,
+    "timestamp": "2025-08-06T21:09:04.159Z"
+  },
+  {
+    "content": "Of course! Are you looking for something specific, like a fresh scent for everyday wear or maybe a more intense fragrance for special occasions? Also, do you have a preferred price range or any favorite brands? Let me know so I can help you find the perfect match!",
+    "isBot": true,
+    "timestamp": "2025-08-06T21:09:04.168Z"
+  },
+  {
+    "content": "what did I ask you earlier?",
+    "isBot": false,
+    "timestamp": "2025-08-06T21:09:14.397Z"
+  },
+  {
+    "content": "You asked me to suggest a perfume. Are there any specific details you’d like to share, like the occasion or scent preferences, so I can help you better? 😊",
+    "isBot": true,
+    "timestamp": "2025-08-06T21:09:14.400Z"
+  }
+]

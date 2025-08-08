@@ -1,0 +1,22 @@
+[
+  {
+    "content": "show me the most expensive product",
+    "isBot": false,
+    "timestamp": "2025-08-07T04:18:50.449Z"
+  },
+  {
+    "content": "Here is the most expensive product for you:\n\n[Juvenis Luxury Scent 6pcs Gift Set 50ml]",
+    "isBot": true,
+    "timestamp": "2025-08-07T04:18:50.467Z"
+  },
+  {
+    "content": "show me the most expensive product",
+    "isBot": false,
+    "timestamp": "2025-08-07T04:18:50.470Z"
+  },
+  {
+    "content": "Here is the most expensive product for you:\n\n[Juvenis Luxury Scent 6pcs Gift Set 50ml]",
+    "isBot": true,
+    "timestamp": "2025-08-07T04:18:50.473Z"
+  }
+]

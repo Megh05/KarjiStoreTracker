@@ -1,0 +1,12 @@
+[
+  {
+    "content": "hi",
+    "isBot": false,
+    "timestamp": "2025-08-06T21:13:48.892Z"
+  },
+  {
+    "content": "Hello there! How can I assist you today?",
+    "isBot": true,
+    "timestamp": "2025-08-06T21:13:48.893Z"
+  }
+]

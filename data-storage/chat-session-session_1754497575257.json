@@ -1,0 +1,12 @@
+[
+  {
+    "content": "i want to buy perfumes",
+    "isBot": false,
+    "timestamp": "2025-08-06T16:26:22.083Z"
+  },
+  {
+    "content": "Hello! Welcome to KarjiStore! We're thrilled to help you find the perfect perfume. To get started, could you tell me a bit more about what you're looking for? Are you interested in a specific scent, or do you have a preferred brand in mind?",
+    "isBot": true,
+    "timestamp": "2025-08-06T16:26:22.084Z"
+  }
+]

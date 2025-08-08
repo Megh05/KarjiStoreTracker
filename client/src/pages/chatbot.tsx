@@ -107,14 +107,44 @@ const storeMessages = (sessionId: string, messages: Message[]) => {
 const getSessionId = () => {
   let sessionId = localStorage.getItem('chatSessionId');
   if (!sessionId) {
-    sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    // Use a more stable sessionId generation
+    const timestamp = Date.now();
+    const randomId = Math.random().toString(36).substr(2, 9);
+    sessionId = `session_${timestamp}_${randomId}`;
     localStorage.setItem('chatSessionId', sessionId);
+    console.log('Generated new sessionId:', sessionId);
+  } else {
+    console.log('Using existing sessionId:', sessionId);
   }
   return sessionId;
 };
 
+// Add a function to get the current sessionId without generating a new one
+const getCurrentSessionId = () => {
+  const sessionId = localStorage.getItem('chatSessionId');
+  console.log('Current sessionId from localStorage:', sessionId);
+  return sessionId;
+};
+
+// Add a function to update session ID from backend response
+const updateSessionId = (newSessionId: string) => {
+  if (newSessionId && newSessionId !== getCurrentSessionId()) {
+    console.log('Updating session ID:', {
+      old: getCurrentSessionId(),
+      new: newSessionId
+    });
+    localStorage.setItem('chatSessionId', newSessionId);
+    return true;
+  }
+  return false;
+};
+
 const Chatbot = forwardRef<ChatbotRef, ChatbotProps>(({ isWidget = false, theme = 'default' }, ref) => {
-  const [sessionId] = useState(getSessionId);
+  const [sessionId] = useState(() => {
+    const id = getSessionId();
+    console.log('Chatbot component initialized with sessionId:', id);
+    return id;
+  });
   const [messages, setMessages] = useState<Message[]>(() => getStoredMessages(sessionId));
   const [input, setInput] = useState("");
   const [chatState, setChatState] = useState<ChatState>({
@@ -383,45 +413,21 @@ const Chatbot = forwardRef<ChatbotRef, ChatbotProps>(({ isWidget = false, theme 
       { label: "Coffee and Beverages", value: "coffee" }
     ];
     
-    try {
-      console.log("Fetching product categories from server...");
-      // First attempt to get categories from the server
-      const response = await fetch('/api/product-recommendations', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          preferences: { getCategories: true },
-          sessionId
-        })
-      });
-      
-      if (!response.ok) {
-        throw new Error(`Server returned ${response.status}: ${response.statusText}`);
+    // Skip directly to budget preference to minimize questions
+    // Remove typing indicator
+    setMessages(prev => prev.filter(msg => msg.type !== 'typing'));
+    
+    // Set a default category and move to budget step
+    setChatState(prev => ({
+      ...prev,
+      productPreferences: {
+        ...prev.productPreferences,
+        category: 'all' // Default to all categories
       }
-      
-      const data = await response.json();
-      console.log("Categories response:", data);
-      
-      // Remove typing indicator
-      setMessages(prev => prev.filter(msg => msg.type !== 'typing'));
-      
-      if (data.categories && data.categories.length > 0) {
-        console.log("Using server-provided categories:", data.categories);
-        askForProductCategory(data.categories);
-      } else {
-        console.log("No categories returned from server, using fallback");
-        askForProductCategory(fallbackCategories);
-      }
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-      // Remove typing indicator
-      setMessages(prev => prev.filter(msg => msg.type !== 'typing'));
-      // Use fallback categories on error
-      console.log("Using fallback categories due to error");
-      askForProductCategory(fallbackCategories);
-    }
+    }));
+    
+    // Skip to budget preference
+    askForBudgetPreference();
   };
 
   // Function to ask for category preference
@@ -447,8 +453,8 @@ const Chatbot = forwardRef<ChatbotRef, ChatbotProps>(({ isWidget = false, theme 
   // Function to ask for budget preference
   const askForBudgetPreference = () => {
     const budgetOptions = [
-      { label: "Budget-friendly", value: "budget" },
-      { label: "Mid-range", value: "mid" },
+      { label: "Budget-friendly", value: "budget-friendly" },
+      { label: "Mid-range", value: "mid-range" },
       { label: "Premium", value: "premium" },
       { label: "Any price range", value: "any" }
     ];
@@ -639,8 +645,19 @@ const Chatbot = forwardRef<ChatbotRef, ChatbotProps>(({ isWidget = false, theme 
         }
       }));
       
-      // Next, ask for features
-      askForFeaturePreferences();
+      // Skip features and go directly to product search
+      // Add typing indicator
+      addTypingIndicator();
+      
+      // Get product recommendations based on collected preferences
+      productRecommendationMutation.mutate({
+        preferences: {
+          ...chatState.productPreferences,
+          budget: mappedOption,
+          features: ['none'] // Default feature
+        },
+        sessionId
+      });
     }
     else if (step === 'features') {
       setChatState(prev => ({
@@ -893,23 +910,38 @@ const Chatbot = forwardRef<ChatbotRef, ChatbotProps>(({ isWidget = false, theme 
       // Add typing indicator
       addTypingIndicator();
       
+      // Get the current session ID from localStorage to ensure we're using the latest one
+      const currentSessionId = getCurrentSessionId() || sessionId;
+      
+      console.log('Sending chat message with sessionId:', currentSessionId);
+      console.log('Component sessionId:', sessionId);
+      console.log('Current sessionId from localStorage:', getCurrentSessionId());
+      console.log('SessionId match:', currentSessionId === sessionId);
+      
       chatMutation.mutate({
         content: userMessage,
-        sessionId,
+        sessionId: currentSessionId,
         isBot: false
       }, {
         onSuccess: (response) => {
           // Remove the typing indicator
           removeTypingIndicator();
           
+          // Update session ID from backend response if provided
+          updateSessionId(response.sessionId);
+          
           console.log('Chat response:', {
             message: response.message,
             intent: response.intent,
-            shouldStartProductFlow: response.shouldStartProductFlow
+            shouldStartProductFlow: response.shouldStartProductFlow,
+            hasProducts: !!response.products && response.products.length > 0,
+            type: response.type,
+            sessionId: response.sessionId || sessionId
           });
           
-          // Check if the RAG service suggests starting the product flow
-          if (response.shouldStartProductFlow && response.intent === 'product_recommendation') {
+          // IMPORTANT: Always prioritize shouldStartProductFlow flag over the presence of products
+          // If shouldStartProductFlow is true, start the preference collection flow regardless of products
+          if (response.shouldStartProductFlow) {
             // Show the AI's response first
             addBotMessage(
               response.message || "I can help you find products!",
@@ -921,6 +953,25 @@ const Chatbot = forwardRef<ChatbotRef, ChatbotProps>(({ isWidget = false, theme 
             setTimeout(() => {
               askForProductPreferences();
             }, 1000);
+          }
+          // Only show products if shouldStartProductFlow is false and we have products
+          else if (response.type === 'product-recommendations' && response.products && response.products.length > 0) {
+            // Create a product recommendation message with the products
+            const message: Message = {
+              id: `search_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+              content: response.message || "Here are some products that match your search:",
+              isBot: true,
+              timestamp: new Date(),
+              type: 'product-recommendations',
+              products: response.products.map((product: any) => ({
+                title: product.title,
+                description: product.description,
+                price: product.price || 0,
+                imageUrl: product.imageUrl,
+                productUrl: product.productUrl
+              }))
+            };
+            setMessages(prev => [...prev, message]);
           } else if (response.intent === 'product_search') {
             // For product_search intent, check if there are products in the response
             if (response.products && response.products.length > 0) {

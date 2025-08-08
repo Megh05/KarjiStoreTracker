@@ -1,0 +1,16 @@
+[
+  {
+    "id": "46a113fe-9f4d-4e9d-bae2-358232e144a4",
+    "content": "hi",
+    "isBot": false,
+    "timestamp": "2025-08-06T15:53:40.373Z"
+  },
+  {
+    "id": "0220b2a6-061d-4a92-bb99-8e384c472eec",
+    "content": "Hello! Welcome to KarjiStore! How can I assist you today with our premium perfumes, watches, or luxury gifts?",
+    "isBot": true,
+    "timestamp": "2025-08-06T15:53:42.145Z",
+    "agentActions": [],
+    "reasoning": ""
+  }
+]

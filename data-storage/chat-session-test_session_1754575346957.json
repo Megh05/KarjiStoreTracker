@@ -1,0 +1,82 @@
+[
+  {
+    "content": "Hello",
+    "isBot": false,
+    "timestamp": "2025-08-07T14:02:32.520Z"
+  },
+  {
+    "content": "Hi there! Welcome to KarjiStore. How can I assist you today?",
+    "isBot": true,
+    "timestamp": "2025-08-07T14:02:32.525Z"
+  },
+  {
+    "content": "Hello",
+    "isBot": false,
+    "timestamp": "2025-08-07T14:02:32.861Z"
+  },
+  {
+    "content": "Hello! Welcome to KarjiStore. How can I assist you today?",
+    "isBot": true,
+    "timestamp": "2025-08-07T14:02:32.864Z"
+  },
+  {
+    "content": "Hello",
+    "isBot": false,
+    "timestamp": "2025-08-07T14:02:32.866Z"
+  },
+  {
+    "content": "Hi there! Welcome to KarjiStore. How can I assist you today?",
+    "isBot": true,
+    "timestamp": "2025-08-07T14:02:32.870Z"
+  },
+  {
+    "content": "Tell me about your perfumes",
+    "isBot": false,
+    "timestamp": "2025-08-07T14:02:41.155Z"
+  },
+  {
+    "content": "We have a wonderful collection of perfumes! What style of fragrance are you looking for? Classic, modern, or something else?",
+    "isBot": true,
+    "timestamp": "2025-08-07T14:02:41.157Z"
+  },
+  {
+    "content": "Do you have any floral scents?",
+    "isBot": false,
+    "timestamp": "2025-08-07T14:02:46.584Z"
+  },
+  {
+    "content": "The OpenRouter API is rate limiting requests. Please try again later.",
+    "isBot": true,
+    "timestamp": "2025-08-07T14:02:46.585Z"
+  },
+  {
+    "content": "Do you have any floral scents?",
+    "isBot": false,
+    "timestamp": "2025-08-07T14:02:46.586Z"
+  },
+  {
+    "content": "The OpenRouter API is rate limiting requests. Please try again later.",
+    "isBot": true,
+    "timestamp": "2025-08-07T14:02:46.604Z"
+  },
+  {
+    "content": "What about for men?",
+    "isBot": false,
+    "timestamp": "2025-08-07T14:02:48.449Z"
+  },
+  {
+    "content": "The OpenRouter API is rate limiting requests. Please try again later.",
+    "isBot": true,
+    "timestamp": "2025-08-07T14:02:48.449Z"
+  },
+  {
+    "content": "What about for men?",
+    "isBot": false,
+    "timestamp": "2025-08-07T14:02:48.451Z"
+  },
+  {
+    "content": "The OpenRouter API is rate limiting requests. Please try again later.",
+    "isBot": true,
+    "timestamp": "2025-08-07T14:02:48.453Z"
+  }
+]

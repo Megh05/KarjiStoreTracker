@@ -1,0 +1,22 @@
+[
+  {
+    "content": "hi",
+    "isBot": false,
+    "timestamp": "2025-08-07T02:46:21.122Z"
+  },
+  {
+    "content": "\n\nHi there! Welcome to KarjiStore. 😊  What can I help you find today?  Are you looking for a special fragrance, a stunning timepiece, or perhaps a luxurious gift? ✨ \n",
+    "isBot": true,
+    "timestamp": "2025-08-07T02:46:21.137Z"
+  },
+  {
+    "content": "hi",
+    "isBot": false,
+    "timestamp": "2025-08-07T02:46:22.393Z"
+  },
+  {
+    "content": "\n\nHi there! 👋 Welcome to KarjiStore! What can I help you find today?  😊  \n\nLooking for something specific or just browsing?  \n",
+    "isBot": true,
+    "timestamp": "2025-08-07T02:46:22.397Z"
+  }
+]

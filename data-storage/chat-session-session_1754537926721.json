@@ -1,0 +1,22 @@
+[
+  {
+    "content": "men",
+    "isBot": false,
+    "timestamp": "2025-08-07T03:38:53.310Z"
+  },
+  {
+    "content": "Great! I have some great options for men. What style are you looking for - classic, modern, or sporty?",
+    "isBot": true,
+    "timestamp": "2025-08-07T03:38:53.314Z"
+  },
+  {
+    "content": "men",
+    "isBot": false,
+    "timestamp": "2025-08-07T03:38:54.407Z"
+  },
+  {
+    "content": "Great! What kind of products are you looking for today?",
+    "isBot": true,
+    "timestamp": "2025-08-07T03:38:54.408Z"
+  }
+]

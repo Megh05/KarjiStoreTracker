@@ -1,0 +1,42 @@
+[
+  {
+    "content": "Hello",
+    "isBot": false,
+    "timestamp": "2025-08-06T16:22:46.365Z"
+  },
+  {
+    "content": "Hello! Welcome to KarjiStore. How can I assist you today? Are you looking for a specific product or do you have a question about your order?",
+    "isBot": true,
+    "timestamp": "2025-08-06T16:22:46.366Z"
+  },
+  {
+    "content": "I want to buy perfumes",
+    "isBot": false,
+    "timestamp": "2025-08-06T16:22:53.251Z"
+  },
+  {
+    "content": "Hello! Welcome to KarjiStore. We have a wide selection of premium perfumes for both men and women. What type of fragrance are you looking for? Do you have a favorite scent or a specific occasion in mind?",
+    "isBot": true,
+    "timestamp": "2025-08-06T16:22:53.254Z"
+  },
+  {
+    "content": "I like floral scents",
+    "isBot": false,
+    "timestamp": "2025-08-06T16:22:58.365Z"
+  },
+  {
+    "content": "Great! Floral scents are always a wonderful choice. Do you have a favorite type of flower or any specific notes you prefer? For example, do you like rose, jasmine, or perhaps something more exotic like ylang-ylang or tuberose? Additionally, are you looking for a light, fresh scent or something more intense and long-lasting?",
+    "isBot": true,
+    "timestamp": "2025-08-06T16:22:58.366Z"
+  },
+  {
+    "content": "What about woody scents instead?",
+    "isBot": false,
+    "timestamp": "2025-08-06T16:23:02.835Z"
+  },
+  {
+    "content": "That's a great question! Woody scents can be quite versatile and can complement many different occasions. Do you have a favorite type of wood or any specific notes you prefer? For example, do you like cedar, sandalwood, or perhaps something more exotic like patchouli or vetiver? Additionally, are you looking for a fresh, light scent or something more intense and long-lasting?",
+    "isBot": true,
+    "timestamp": "2025-08-06T16:23:02.836Z"
+  }
+]

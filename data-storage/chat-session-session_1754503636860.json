@@ -1,0 +1,12 @@
+[
+  {
+    "content": "suggest me perfume",
+    "isBot": false,
+    "timestamp": "2025-08-06T18:07:18.994Z"
+  },
+  {
+    "content": "Hello! I'd be happy to help you find the perfect perfume. To give you the best recommendation, could you tell me a bit more about your preferences? Are you looking for a specific scent, like floral, woody, or something else? Do you have a preferred brand or price range?",
+    "isBot": true,
+    "timestamp": "2025-08-06T18:07:18.995Z"
+  }
+]

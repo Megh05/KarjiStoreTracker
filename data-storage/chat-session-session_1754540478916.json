@@ -1,0 +1,12 @@
+[
+  {
+    "content": "show me the most expensive perfume",
+    "isBot": false,
+    "timestamp": "2025-08-07T04:21:26.158Z"
+  },
+  {
+    "content": "Here's your choice: [product card]\n\nWould you like to know more about it ?",
+    "isBot": true,
+    "timestamp": "2025-08-07T04:21:26.171Z"
+  }
+]

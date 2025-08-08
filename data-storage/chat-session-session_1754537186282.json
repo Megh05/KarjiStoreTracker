@@ -1,0 +1,12 @@
+[
+  {
+    "content": "show me watches",
+    "isBot": false,
+    "timestamp": "2025-08-07T03:26:36.672Z"
+  },
+  {
+    "content": "Great! I found some watches for you. What style are you looking for - classic, modern, or sporty?",
+    "isBot": true,
+    "timestamp": "2025-08-07T03:26:36.914Z"
+  }
+]

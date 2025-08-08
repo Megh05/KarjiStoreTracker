@@ -1,0 +1,12 @@
+[
+  {
+    "content": "show me wathces",
+    "isBot": false,
+    "timestamp": "2025-08-07T04:12:53.729Z"
+  },
+  {
+    "content": "What kind of watches are you looking for?",
+    "isBot": true,
+    "timestamp": "2025-08-07T04:12:53.732Z"
+  }
+]

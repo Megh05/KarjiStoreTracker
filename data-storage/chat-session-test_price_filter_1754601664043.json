@@ -1,0 +1,22 @@
+[
+  {
+    "content": "show me perfumes under 200 aed",
+    "isBot": false,
+    "timestamp": "2025-08-07T21:21:08.297Z"
+  },
+  {
+    "content": "Sure! Here are some perfumes under 200 AED that you might enjoy. I'll show you the best options available.",
+    "isBot": true,
+    "timestamp": "2025-08-07T21:21:08.297Z"
+  },
+  {
+    "content": "show me watches between 500 and 1000 aed",
+    "isBot": false,
+    "timestamp": "2025-08-07T21:21:17.838Z"
+  },
+  {
+    "content": "",
+    "isBot": true,
+    "timestamp": "2025-08-07T21:21:17.838Z"
+  }
+]

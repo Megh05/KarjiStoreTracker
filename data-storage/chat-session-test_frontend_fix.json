@@ -1,0 +1,62 @@
+[
+  {
+    "content": "hi",
+    "isBot": false,
+    "timestamp": "2025-08-06T20:12:08.416Z"
+  },
+  {
+    "content": "Hello! How can I assist you today? Are you looking for something specific or do you have any questions about our products? 😊",
+    "isBot": true,
+    "timestamp": "2025-08-06T20:12:08.417Z"
+  },
+  {
+    "content": "suggest me perfume",
+    "isBot": false,
+    "timestamp": "2025-08-06T20:12:36.676Z"
+  },
+  {
+    "content": "I'd be happy to help with that! Are you looking for a perfume for yourself or as a gift? Also, do you have any preferred scent profiles, like floral, woody, or fresh? Let me know if there's a particular brand or budget range you're considering as well.",
+    "isBot": true,
+    "timestamp": "2025-08-06T20:12:36.678Z"
+  },
+  {
+    "content": "floral",
+    "isBot": false,
+    "timestamp": "2025-08-06T20:12:59.701Z"
+  },
+  {
+    "content": "Great choice! Floral perfumes are always a classic. Do you have a particular occasion in mind, or is this for everyday wear? Also, is there a specific brand you're interested in, or are you open to exploring different options?",
+    "isBot": true,
+    "timestamp": "2025-08-06T20:12:59.710Z"
+  },
+  {
+    "content": "what did I ask you earlier?",
+    "isBot": false,
+    "timestamp": "2025-08-06T20:13:19.245Z"
+  },
+  {
+    "content": "You were asking for a perfume recommendation and mentioned you're interested in floral scents. If you have any more details to share, like a budget or occasion, I'd be happy to help you find the perfect match!",
+    "isBot": true,
+    "timestamp": "2025-08-06T20:13:19.246Z"
+  },
+  {
+    "content": "tell me about our conversation",
+    "isBot": false,
+    "timestamp": "2025-08-06T20:13:31.377Z"
+  },
+  {
+    "content": "Certainly! You started by greeting me with a \"hi,\" and then asked for a perfume suggestion, specifically mentioning an interest in floral scents. We've been discussing your preferences to help find the right perfume for you. If there's anything else you'd like to explore or any additional details you'd like to share, feel free to let me know!",
+    "isBot": true,
+    "timestamp": "2025-08-06T20:13:31.381Z"
+  },
+  {
+    "content": "what did I ask you earlier?",
+    "isBot": false,
+    "timestamp": "2025-08-06T20:22:09.843Z"
+  },
+  {
+    "content": "The OpenRouter account has reached its usage limit. Please check your billing settings.",
+    "isBot": true,
+    "timestamp": "2025-08-06T20:22:09.846Z"
+  }
+]

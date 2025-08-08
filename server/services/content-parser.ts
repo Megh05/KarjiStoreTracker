@@ -2,10 +2,10 @@ import fs from 'fs';
 import path from 'path';
 import * as cheerio from 'cheerio';
 import { parseString } from 'xml2js';
-import { RAGService, enhancedRagService } from './rag-service';
+import { agenticRagService } from './agentic-rag-service';
 
-// Create an instance of RAGService or use the enhancedRagService
-const ragService = enhancedRagService; // Use the enhanced RAG service
+// Use the agentic RAG service
+const ragService = agenticRagService;
 
 export interface ParsedContent {
   title: string;

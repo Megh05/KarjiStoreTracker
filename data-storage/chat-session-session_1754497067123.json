@@ -1,0 +1,12 @@
+[
+  {
+    "content": "show me perfumes under 300 aed",
+    "isBot": false,
+    "timestamp": "2025-08-06T16:17:51.708Z"
+  },
+  {
+    "content": "Hello! Welcome to KarjiStore. We have a variety of premium perfumes that fit your budget. Could you tell me more about the occasion or the style you're looking for?",
+    "isBot": true,
+    "timestamp": "2025-08-06T16:17:51.711Z"
+  }
+]

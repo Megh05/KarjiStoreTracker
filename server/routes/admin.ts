@@ -2,14 +2,14 @@ import type { Express } from "express";
 import { z } from "zod";
 import { vectorStorage } from "../services/vector-storage";
 import { aiService } from "../services/ai-service";
-import { RAGService, enhancedRagService } from "../services/rag-service";
+import { agenticRagService } from "../services/agentic-rag-service";
 import { contentParser } from "../services/content-parser";
 import { schedulerService } from "../services/scheduler";
 import { azureConfigSchema, ollamaConfigSchema, openRouterConfigSchema, aiProviderConfigSchema, AzureConfig, OllamaConfig, OpenRouterConfig } from "@shared/schema";
 import multer from "multer";
 
-// Use the enhanced RAG service for all operations
-const ragService = enhancedRagService;
+// Use the agentic RAG service for all operations
+const ragService = agenticRagService;
 
 // Configure multer for file uploads
 const upload = multer({ 

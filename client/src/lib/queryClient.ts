@@ -10,14 +10,27 @@ async function throwIfResNotOk(res: Response) {
 export async function apiRequest(url: string, options?: {
   method?: string;
   body?: string;
+  headers?: Record<string, string>;
 }): Promise<any> {
   const method = options?.method || 'GET';
   console.log(`API Request: ${method} ${url}`, options?.body ? JSON.parse(options.body) : '');
   
   try {
+    // Merge default headers with custom headers
+    const headers: Record<string, string> = {
+      ...(options?.body ? { "Content-Type": "application/json" } : {}),
+      ...(options?.headers || {})
+    };
+    
+    // Add session ID from localStorage if available and not already in headers
+    const sessionId = localStorage.getItem('chatSessionId');
+    if (sessionId && !headers['X-Session-ID']) {
+      headers['X-Session-ID'] = sessionId;
+    }
+    
     const res = await fetch(url, {
       method,
-      headers: options?.body ? { "Content-Type": "application/json" } : {},
+      headers,
       body: options?.body,
       credentials: "include",
     });

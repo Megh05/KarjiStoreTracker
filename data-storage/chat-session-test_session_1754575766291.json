@@ -1,0 +1,72 @@
+[
+  {
+    "content": "Hello",
+    "isBot": false,
+    "timestamp": "2025-08-07T14:09:32.452Z"
+  },
+  {
+    "content": "Hi there! Welcome to KarjiStore. How can I assist you today?",
+    "isBot": true,
+    "timestamp": "2025-08-07T14:09:32.453Z"
+  },
+  {
+    "content": "Hello",
+    "isBot": false,
+    "timestamp": "2025-08-07T14:09:32.603Z"
+  },
+  {
+    "content": "Hi there! Welcome to KarjiStore. How can I assist you today?",
+    "isBot": true,
+    "timestamp": "2025-08-07T14:09:32.603Z"
+  },
+  {
+    "content": "Hello",
+    "isBot": false,
+    "timestamp": "2025-08-07T14:09:32.605Z"
+  },
+  {
+    "content": "Hi there! Welcome to KarjiStore. How can I assist you today?",
+    "isBot": true,
+    "timestamp": "2025-08-07T14:09:32.607Z"
+  },
+  {
+    "content": "Tell me about your perfumes",
+    "isBot": false,
+    "timestamp": "2025-08-07T14:09:42.754Z"
+  },
+  {
+    "content": "We have a wide range of perfumes for both men and women. Are you looking for something specific, like a particular brand or style?",
+    "isBot": true,
+    "timestamp": "2025-08-07T14:09:42.754Z"
+  },
+  {
+    "content": "Do you have any floral scents?",
+    "isBot": false,
+    "timestamp": "2025-08-07T14:09:57.906Z"
+  },
+  {
+    "content": "Absolutely! Floral scents are popular. Do you have a budget range in mind?",
+    "isBot": true,
+    "timestamp": "2025-08-07T14:09:57.908Z"
+  },
+  {
+    "content": "What about for men?",
+    "isBot": false,
+    "timestamp": "2025-08-07T14:10:04.678Z"
+  },
+  {
+    "content": "Great! We have a wonderful selection of premium men's items. Are you looking for watches, perfumes, or luxury gifts?",
+    "isBot": true,
+    "timestamp": "2025-08-07T14:10:04.683Z"
+  },
+  {
+    "content": "What about for men?",
+    "isBot": false,
+    "timestamp": "2025-08-07T14:10:04.690Z"
+  },
+  {
+    "content": "Great! We have a wonderful selection of premium men's items. Are you looking for watches, perfumes, or luxury gifts?",
+    "isBot": true,
+    "timestamp": "2025-08-07T14:10:04.692Z"
+  }
+]

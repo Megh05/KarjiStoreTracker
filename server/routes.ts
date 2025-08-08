@@ -4,9 +4,12 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { aiService } from './services/ai-service';
-import { RAGService, enhancedRagService } from './services/rag-service';
+import { agenticRagService } from './services/agentic-rag-service';
+import { unifiedRagOrchestrator } from './services/unified-rag-orchestrator';
 import { contentParser } from './services/content-parser';
+import { agentSystem } from './services/agent-system';
 import { registerAdminRoutes } from './routes/admin';
+import agentRoutes from './routes/agent';
 import http from 'http';
 import { XMLParser } from 'fast-xml-parser';
 import axios from 'axios';
@@ -19,9 +22,6 @@ const __dirname = path.dirname(__filename);
 
 const router = express.Router();
 
-// Create an instance of the RAGService class
-const ragService = new RAGService();
-
 // Export the function that registers all routes
 export async function registerRoutes(app: express.Express): Promise<http.Server> {
   // Admin routes
@@ -30,31 +30,115 @@ export async function registerRoutes(app: express.Express): Promise<http.Server>
   // Register API routes
   app.use('/api', router);
   
+  // Register agent routes
+  app.use('/api', agentRoutes);
+  
   // Create and return the HTTP server
   return http.createServer(app);
 }
+
+// Chat history endpoint
+router.get('/chat/history/:sessionId', async (req, res) => {
+  try {
+    const { sessionId } = req.params;
+    
+    if (!sessionId) {
+      return res.status(400).json({ error: 'Session ID is required' });
+    }
+    
+    console.log(`\n📋 RETRIEVING CHAT HISTORY:`);
+    console.log(`   SessionId: ${sessionId}`);
+    
+    // Check if the file exists directly
+    const filePath = path.join(process.cwd(), 'data-storage', `chat-session-${sessionId}.json`);
+    const fileExists = fs.existsSync(filePath);
+    console.log(`   File path: ${filePath}`);
+    console.log(`   File exists: ${fileExists ? '✅ YES' : '❌ NO'}`);
+    
+    if (fileExists) {
+      try {
+        // Read the file directly
+        const fileContent = fs.readFileSync(filePath, 'utf8');
+        const messages = JSON.parse(fileContent);
+        console.log(`   Read ${messages.length} messages directly from file`);
+        return res.json(messages);
+      } catch (fileError) {
+        console.error('Error reading file directly:', fileError);
+      }
+    }
+    
+    // Fallback to vector storage method
+    console.log('   Falling back to vector storage method');
+    const chatHistory = await vectorStorage.getChatHistory(sessionId);
+    
+    console.log(`   Retrieved ${chatHistory.length} messages from vector storage`);
+    
+    return res.json(chatHistory);
+  } catch (error) {
+    console.error('Error retrieving chat history:', error);
+    return res.status(500).json({ error: 'Failed to retrieve chat history' });
+  }
+});
 
 // Chat message endpoint
 router.post('/chat/message', async (req, res) => {
   try {
     const { content, sessionId, isBot } = req.body;
 
-    if (!content || !sessionId) {
-      return res.status(400).json({ error: 'Missing required fields' });
+    if (!content) {
+      return res.status(400).json({ error: 'Missing content field' });
     }
+
+    // Generate session ID if not provided, but try to maintain session continuity
+    let finalSessionId = sessionId;
+    
+    if (!finalSessionId) {
+      // Check if there's a session ID in the request headers or cookies
+      const headerSessionId = req.headers['x-session-id'] || req.headers['session-id'];
+      if (headerSessionId) {
+        finalSessionId = headerSessionId as string;
+      } else {
+        finalSessionId = `session_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+      }
+    }
+    
+    console.log(`\n📋 SESSION MANAGEMENT:`);
+    console.log(`   Frontend provided sessionId: ${sessionId || '❌ NOT PROVIDED'}`);
+    console.log(`   Headers sessionId: ${req.headers['x-session-id'] || req.headers['session-id'] || '❌ NOT FOUND'}`);
+    console.log(`   Final sessionId: ${finalSessionId}`);
+    console.log(`   Session continuity: ${sessionId ? '✅ MAINTAINED' : '❌ BROKEN'}`);
 
     // For now, we'll just handle the message without storing it
     // If it's a user message, generate a response
     if (!isBot) {
       try {
         // Get conversation history to check context
-        const chatHistory = await vectorStorage.getChatHistory(sessionId);
+        const chatHistory = await vectorStorage.getChatHistory(finalSessionId);
         const conversationContext = chatHistory
-          .slice(-4)
+          .slice(-8) // Increase from 4 to 8 to maintain more context
           .map(msg => ({
             role: msg.isBot ? 'assistant' : 'user',
             content: msg.content
           }));
+          
+        console.log(`\n🔍 SESSION DEBUG for ${finalSessionId}:`);
+        console.log(`   Total messages in history: ${chatHistory.length}`);
+        console.log(`   Using ${conversationContext.length} messages for context`);
+        console.log(`   Current user message: "${content}"`);
+        
+        if (conversationContext.length > 0) {
+          console.log(`   Recent conversation context:`);
+          conversationContext.slice(-5).forEach((msg, index) => {
+            console.log(`     ${index + 1}. ${msg.role.toUpperCase()}: "${msg.content}"`);
+          });
+        } else {
+          console.log(`   ⚠️  No conversation history found - this might be a new session`);
+        }
+        
+        // Check if this is a follow-up to previous conversation
+        const isFollowUp = conversationContext.length > 0;
+        console.log(`   Is follow-up: ${isFollowUp}`);
+        console.log(`   Session continuity: ${sessionId ? '✅ Provided' : '❌ Not provided'}`);
         
         // Check if this is a follow-up to a previous product-related question
         const isFollowUpToProductQuery = await isProductRelatedFollowUp(content, conversationContext);
@@ -68,12 +152,30 @@ router.post('/chat/message', async (req, res) => {
           // If it's an order tracking query, return a fixed response without using AI
           if (isOrderTrackingQuery) {
             console.log('Order tracking query detected, returning fixed response');
+            console.log(`📤 RETURNING ORDER TRACKING RESPONSE with sessionId: ${finalSessionId}`);
+            
+            // Save conversation
+            try {
+              await vectorStorage.saveChatMessage(finalSessionId, {
+                content: content,
+                isBot: false
+              });
+              await vectorStorage.saveChatMessage(finalSessionId, {
+                content: "I'll help you track your order. Please provide your email address first.",
+                isBot: true
+              });
+              console.log(`💾 Saved order tracking conversation for session: ${finalSessionId}`);
+            } catch (error) {
+              console.error('Error saving order tracking conversation:', error);
+            }
+            
             return res.json({ 
               message: "I'll help you track your order. Please provide your email address first.",
               sources: [],
               confidence: 1.0,
               intent: 'order_tracking',
-              shouldStartProductFlow: false
+              shouldStartProductFlow: false,
+              sessionId: finalSessionId
             });
           }
         }
@@ -90,12 +192,30 @@ router.post('/chat/message', async (req, res) => {
           
           if (isInOrderTrackingFlow) {
             console.log('Email address detected in order tracking flow, returning fixed response asking for order ID');
+            console.log(`📤 RETURNING EMAIL RESPONSE with sessionId: ${finalSessionId}`);
+            
+            // Save conversation
+            try {
+              await vectorStorage.saveChatMessage(finalSessionId, {
+                content: content,
+                isBot: false
+              });
+              await vectorStorage.saveChatMessage(finalSessionId, {
+                content: "Thank you! Now please provide your order ID or order number.",
+                isBot: true
+              });
+              console.log(`💾 Saved email conversation for session: ${finalSessionId}`);
+            } catch (error) {
+              console.error('Error saving email conversation:', error);
+            }
+            
             return res.json({ 
               message: "Thank you! Now please provide your order ID or order number.",
               sources: [],
               confidence: 1.0,
               intent: 'order_tracking',
-              shouldStartProductFlow: false
+              shouldStartProductFlow: false,
+              sessionId: finalSessionId
             });
           }
         }
@@ -112,18 +232,41 @@ router.post('/chat/message', async (req, res) => {
           
           if (isInOrderTrackingFlow) {
             console.log('Order ID detected in order tracking flow, returning fixed response for order lookup');
+            console.log(`📤 RETURNING ORDER ID RESPONSE with sessionId: ${finalSessionId}`);
+            
+            // Save conversation
+            try {
+              await vectorStorage.saveChatMessage(finalSessionId, {
+                content: content,
+                isBot: false
+              });
+              await vectorStorage.saveChatMessage(finalSessionId, {
+                content: "Let me look up your order...",
+                isBot: true
+              });
+              console.log(`💾 Saved order ID conversation for session: ${finalSessionId}`);
+            } catch (error) {
+              console.error('Error saving order ID conversation:', error);
+            }
+            
             return res.json({ 
               message: "Let me look up your order...",
               sources: [],
               confidence: 1.0,
               intent: 'order_tracking',
-              shouldStartProductFlow: false
+              shouldStartProductFlow: false,
+              sessionId: finalSessionId
             });
           }
         }
         
-        // For non-order tracking queries, use the enhanced RAG service
-        const ragResponse = await enhancedRagService.query(content, sessionId);
+        // Use the unified RAG orchestrator for enhanced responses
+        console.log(`\n🚀 SENDING TO RAG ORCHESTRATOR:`);
+        console.log(`   Query: "${content}"`);
+        console.log(`   SessionId: ${finalSessionId}`);
+        console.log(`   Context messages: ${conversationContext.length}`);
+        
+        const ragResponse = await unifiedRagOrchestrator.query(content, finalSessionId);
         
         // Check if the response contains configuration error messages
         if (ragResponse.answer.includes("OpenRouter integration is not properly configured") || 
@@ -132,11 +275,237 @@ router.post('/chat/message', async (req, res) => {
           console.log("Detected configuration error in RAG response");
         }
         
+        // If shouldStartProductFlow is true, don't show products even if we have them
+    if (ragResponse.shouldStartProductFlow) {
+      console.log("Should start product flow, checking if we should show products anyway");
+      
+      // Check if the query contains enough specific product information to skip the flow
+      const lowerQuery = content.toLowerCase();
+      const hasSpecificInfo = lowerQuery.includes('perfume') || 
+                             lowerQuery.includes('watch') || 
+                             lowerQuery.includes('jewelry') || 
+                             lowerQuery.includes('gift') ||
+                             lowerQuery.includes('floral') ||
+                             lowerQuery.includes('woody') ||
+                             lowerQuery.includes('fresh') ||
+                             lowerQuery.includes('women') ||
+                             lowerQuery.includes('men') ||
+                             lowerQuery.includes('ladies') ||
+                             lowerQuery.includes('gentlemen');
+                             
+      // Also check if we have products and this might be a follow-up
+      const hasProducts = ragResponse.products && ragResponse.products.length > 0;
+      const isShortQuery = content.trim().split(/\s+/).length <= 3;
+      
+      console.log(`hasSpecificInfo: ${hasSpecificInfo}, hasProducts: ${hasProducts}, isShortQuery: ${isShortQuery}`);
+      
+      if (hasSpecificInfo || (hasProducts && isShortQuery)) {
+        console.log("Showing products despite shouldStartProductFlow due to specific info or follow-up");
+        
+        // For gender-specific queries, search for products directly
+        if (lowerQuery.includes('women') || lowerQuery.includes('ladies')) {
+          console.log("Gender-specific query detected (women/ladies), searching for matching products");
+          
+          try {
+            const productResults = await vectorStorage.searchProducts(content, 5);
+            
+            // Filter for women's products
+            const filteredProducts = productResults.filter(product => {
+              const productContent = (product.content || '').toLowerCase();
+              const productTitle = (product.metadata?.title || '').toLowerCase();
+              
+              return productContent.includes('women') || 
+                     productContent.includes('ladies') || 
+                     productTitle.includes('women') || 
+                     productTitle.includes('ladies');
+            });
+            
+            console.log(`Found ${filteredProducts.length} women's products out of ${productResults.length} total`);
+            
+            if (filteredProducts.length > 0) {
+              // Apply budget filter from user content if present (e.g., "under 1500", "between 500 and 1000")
+              let minPrice = 0;
+              let maxPrice = Infinity;
+              const lowerContent = (content || '').toLowerCase();
+              const underMatch = lowerContent.match(/under\s+(\d+)/i) || lowerContent.match(/less\s+than\s+(\d+)/i);
+              const betweenMatch = lowerContent.match(/between\s+(\d+)\s+and\s+(\d+)/i) || lowerContent.match(/(\d+)\s*[-to]{1,3}\s*(\d+)/i);
+              const overMatch = lowerContent.match(/over\s+(\d+)/i) || lowerContent.match(/more\s+than\s+(\d+)/i);
+              if (underMatch) {
+                maxPrice = parseInt(underMatch[1], 10);
+              } else if (betweenMatch) {
+                minPrice = parseInt(betweenMatch[1], 10);
+                maxPrice = parseInt(betweenMatch[2], 10);
+              } else if (overMatch) {
+                minPrice = parseInt(overMatch[1], 10);
+              }
+              // Default to displaying the gender-filtered products
+              let toDisplayProducts = filteredProducts;
+
+              if (minPrice > 0 || maxPrice < Infinity) {
+                console.log(`Applying gender-specific budget filter: min=${minPrice}, max=${maxPrice}`);
+                const budgetFiltered = filteredProducts.filter((result: any) => {
+                  let price = 0;
+                  if (typeof result.metadata?.price === 'string') {
+                    price = parseFloat(result.metadata.price);
+                  } else if (typeof result.metadata?.price === 'number') {
+                    price = result.metadata.price;
+                  }
+                  const within = price >= minPrice && price <= maxPrice;
+                  if (!within) {
+                    console.log(`Excluding (budget): ${result.metadata?.title} - ${price}`);
+                  }
+                  return within;
+                });
+                toDisplayProducts = budgetFiltered;
+                console.log(`After gender-specific budget filtering: ${budgetFiltered.length} products remain`);
+              }
+
+              // Process products for display
+              const products = toDisplayProducts.map(result => ({
+                title: result.metadata?.title || 'Unknown Product',
+                description: result.content,
+                price: result.metadata?.price ? parseFloat(String(result.metadata.price)) : 0,
+                imageUrl: result.metadata?.imageUrl || null,
+                productUrl: result.metadata?.productUrl || '#'
+              }));
+              
+              return res.json({ 
+                message: ragResponse.answer,
+                sources: ragResponse.sources || [],
+                confidence: ragResponse.confidence || 0.95,
+                type: 'product-recommendations',
+                products
+              });
+            }
+          } catch (error) {
+            console.error("Error searching for gender-specific products:", error);
+          }
+        }
+        
+        // For men's products
+        if (lowerQuery.includes('men') || lowerQuery.includes('gentlemen')) {
+          console.log("Gender-specific query detected (men/gentlemen), searching for matching products");
+          
+          try {
+            const productResults = await vectorStorage.searchProducts(content, 5);
+            
+            // Filter for men's products
+            const filteredProducts = productResults.filter(product => {
+              const productContent = (product.content || '').toLowerCase();
+              const productTitle = (product.metadata?.title || '').toLowerCase();
+              
+              return productContent.includes('men') || 
+                     productContent.includes('gentlemen') || 
+                     productTitle.includes('men') || 
+                     productTitle.includes('gentlemen');
+            });
+            
+            console.log(`Found ${filteredProducts.length} men's products out of ${productResults.length} total`);
+            
+            if (filteredProducts.length > 0) {
+              // Process products for display
+              const products = filteredProducts.map(result => ({
+                title: result.metadata?.title || 'Unknown Product',
+                description: result.content,
+                price: result.metadata?.price ? parseFloat(String(result.metadata.price)) : 0,
+                imageUrl: result.metadata?.imageUrl || null,
+                productUrl: result.metadata?.productUrl || '#'
+              }));
+              
+              return res.json({ 
+                message: ragResponse.answer,
+                sources: ragResponse.sources || [],
+                confidence: ragResponse.confidence || 0.95,
+                type: 'product-recommendations',
+                products
+              });
+            }
+          } catch (error) {
+            console.error("Error searching for gender-specific products:", error);
+          }
+        }
+        
+        // Process products for display (non-gender specific)
+        const products = ragResponse.products || [];
+        
+        return res.json({ 
+          message: ragResponse.answer,
+          sources: ragResponse.sources || [],
+          confidence: ragResponse.confidence || 0.95,
+          type: 'product-recommendations',
+          products
+        });
+      }
+      
+      console.log("Not showing products, starting product flow");
+      console.log(`📤 RETURNING PRODUCT FLOW RESPONSE with sessionId: ${finalSessionId}`);
+      
+      // Save conversation
+      try {
+        await vectorStorage.saveChatMessage(finalSessionId, {
+          content: content,
+          isBot: false
+        });
+        await vectorStorage.saveChatMessage(finalSessionId, {
+          content: ragResponse.answer,
+          isBot: true
+        });
+        console.log(`💾 Saved product flow conversation for session: ${finalSessionId}`);
+      } catch (error) {
+        console.error('Error saving product flow conversation:', error);
+      }
+      
+      return res.json({ 
+        message: ragResponse.answer,
+        sources: ragResponse.sources || [],
+        confidence: ragResponse.confidence || 0.95,
+        intent: ragResponse.intent,
+        shouldStartProductFlow: true,
+        sessionId: finalSessionId
+      });
+    }
+        
         // Ensure products are always in the right format for card display
         let products = ragResponse.products;
         
         // If we have products, make sure they have all required fields
         if (products && products.length > 0) {
+          // Apply budget filter from user content if present (e.g., "under 1500", "between 500 and 1000")
+          try {
+            let minPrice = 0;
+            let maxPrice = Infinity;
+            const lowerContent = (content || '').toLowerCase();
+            const underMatch = lowerContent.match(/under\s+(\d+)/i) || lowerContent.match(/less\s+than\s+(\d+)/i);
+            const betweenMatch = lowerContent.match(/between\s+(\d+)\s+and\s+(\d+)/i) || lowerContent.match(/(\d+)\s*[-to]{1,3}\s*(\d+)/i);
+            const overMatch = lowerContent.match(/over\s+(\d+)/i) || lowerContent.match(/more\s+than\s+(\d+)/i);
+            if (underMatch) {
+              maxPrice = parseInt(underMatch[1], 10);
+            } else if (betweenMatch) {
+              minPrice = parseInt(betweenMatch[1], 10);
+              maxPrice = parseInt(betweenMatch[2], 10);
+            } else if (overMatch) {
+              minPrice = parseInt(overMatch[1], 10);
+            }
+            if (minPrice > 0 || maxPrice < Infinity) {
+              console.log(`Applying budget filter to ragResponse.products: min=${minPrice}, max=${maxPrice}`);
+              products = products.filter((p: any) => {
+                let price = 0;
+                if (typeof p.price === 'string') {
+                  price = parseFloat(p.price);
+                } else if (typeof p.price === 'number') {
+                  price = p.price;
+                }
+                const within = price >= minPrice && price <= maxPrice;
+                if (!within) {
+                  console.log(`Excluding (budget): ${p.title} - ${price}`);
+                }
+                return within;
+              });
+              console.log(`After budget filtering ragResponse.products: ${products.length} products remain`);
+            }
+          } catch (e) {
+            console.warn('Budget filter on ragResponse.products failed:', e);
+          }
           // Sample prices for products based on brand
           const samplePrices: Record<string, number> = {
             'Calvin Klein': 85.99,
@@ -204,74 +573,68 @@ router.post('/chat/message', async (req, res) => {
           });
           
           // Set the message type to product-recommendations to trigger the card display
+          console.log(`📤 RETURNING PRODUCT RECOMMENDATIONS with sessionId: ${finalSessionId}`);
+          
+          // Save conversation
+          try {
+            await vectorStorage.saveChatMessage(finalSessionId, {
+              content: content,
+              isBot: false
+            });
+            await vectorStorage.saveChatMessage(finalSessionId, {
+              content: ragResponse.answer,
+              isBot: true
+            });
+            console.log(`💾 Saved product recommendations conversation for session: ${finalSessionId}`);
+          } catch (error) {
+            console.error('Error saving product recommendations conversation:', error);
+          }
+          
           return res.json({ 
             message: ragResponse.answer,
             sources: ragResponse.sources || [],
             confidence: ragResponse.confidence || 0.95,
-            intent: ragResponse.intent,
-            shouldStartProductFlow: ragResponse.shouldStartProductFlow,
             type: 'product-recommendations',
-            products
+            products,
+            sessionId: finalSessionId
           });
-        } else if (ragResponse.intent === 'product_recommendation' || ragResponse.intent === 'product_search') {
-          // If we have a product intent but no products, try to find some generic products
-          try {
-            // Read products from file
-            const productsFilePath = path.join(process.cwd(), 'data-storage', 'products.json');
-            const productsData = fs.readFileSync(productsFilePath, 'utf8');
-            const allProducts = JSON.parse(productsData);
-            
-            // Get 5 random products
-            const randomProducts = allProducts
-              .sort(() => 0.5 - Math.random())
-              .slice(0, 5)
-              .map((product: any) => {
-                // Format product data
-                let productUrl = product.productUrl || '';
-                if (productUrl && !productUrl.startsWith('http')) {
-                  productUrl = `https://www.karjistore.com${productUrl.startsWith('/') ? productUrl : '/' + productUrl}`;
-                }
-                
-                let imageUrl = product.imageUrl || '';
-                if (imageUrl && !imageUrl.startsWith('http')) {
-                  imageUrl = `https://www.karjistore.com${imageUrl.startsWith('/') ? imageUrl : '/' + imageUrl}`;
-                }
-                
-                let price = typeof product.price === 'number' ? product.price : 
-                           (typeof product.price === 'string' ? parseFloat(product.price) : 99.99);
-                
-                console.log(`Sending fallback product to client: ${product.title}`);
-                
-                return {
-                  title: product.title || 'Unknown Product',
-                  description: product.description || 'No description available',
-                  price: price,
-                  imageUrl: imageUrl || null,
-                  productUrl: productUrl
-                };
-              });
-            
-            return res.json({ 
-              message: ragResponse.answer,
-              sources: ragResponse.sources || [],
-              confidence: ragResponse.confidence || 0.95,
-              intent: ragResponse.intent,
-              shouldStartProductFlow: false,
-              type: 'product-recommendations',
-              products: randomProducts
-            });
-          } catch (error) {
-            console.error('Error getting fallback products:', error);
-          }
         }
         
-        // Return the RAG response
+        // Save conversation to storage
+        try {
+          // Save user message
+          await vectorStorage.saveChatMessage(finalSessionId, {
+            content: content,
+            isBot: false
+          });
+          
+          // Save bot response
+          await vectorStorage.saveChatMessage(finalSessionId, {
+            content: ragResponse.answer,
+            isBot: true
+          });
+          
+          console.log(`💾 Saved conversation for session: ${finalSessionId}`);
+        } catch (error) {
+          console.error('Error saving conversation:', error);
+        }
+        
+        // No fallback products - just return the RAG response
+        console.log(`\n📤 RETURNING RESPONSE:`);
+        console.log(`   Message: "${ragResponse.answer}"`);
+        console.log(`   SessionId: ${finalSessionId}`);
+        console.log(`   Confidence: ${ragResponse.confidence || 0.95}`);
+        console.log(`   Products: ${ragResponse.products ? ragResponse.products.length : 0}`);
+        console.log(`   Intent: ${ragResponse.intent}`);
+        console.log(`   ShouldStartProductFlow: ${ragResponse.shouldStartProductFlow}`);
+        
         return res.json({ 
           message: ragResponse.answer,
           sources: ragResponse.sources || [],
           confidence: ragResponse.confidence || 0.95,
           intent: ragResponse.intent,
-          shouldStartProductFlow: ragResponse.shouldStartProductFlow
+          shouldStartProductFlow: ragResponse.shouldStartProductFlow,
+          sessionId: finalSessionId
         });
       } catch (error) {
         console.error('Error generating response:', error);
@@ -287,6 +650,23 @@ router.post('/chat/message', async (req, res) => {
   }
 });
 
+// Helper function to determine if a query is product-related
+function isProductQuery(query: string): boolean {
+  const lowerQuery = query.toLowerCase();
+  
+  // Use semantic patterns instead of hardcoded keywords
+  const productPatterns = [
+    // Questions about products
+    /what (kind|type|sort) of|do you (have|sell|offer)/i,
+    // Shopping intent
+    /looking for|interested in|show me|find|suggest|recommend/i,
+    // Product categories (more general)
+    /items?|products?|goods|merchandise|collection|catalog|shop/i
+  ];
+  
+  return productPatterns.some(pattern => pattern.test(lowerQuery));
+}
+
 // Helper function to determine if a query is a follow-up to a product-related question
 async function isProductRelatedFollowUp(query: string, conversationContext: { role: string; content: string }[]): Promise<boolean> {
   if (conversationContext.length < 2) return false;
@@ -297,19 +677,26 @@ async function isProductRelatedFollowUp(query: string, conversationContext: { ro
     
   if (!lastAssistantMessage) return false;
   
-  // Check if the last assistant message was about products
-  const productTerms = ['product', 'item', 'perfume', 'fragrance', 'cologne', 'watch', 'jewelry', 'oud', 'scent'];
-  const lastMessageWasAboutProducts = productTerms.some(term => 
-    lastAssistantMessage.content.toLowerCase().includes(term)
+  // Check if the last assistant message was about products using semantic patterns
+  const productRelatedPatterns = [
+    // Product-related terms
+    /products?|items?|merchandise|catalog|collection/i,
+    // Shopping-related questions
+    /looking for|interested in|prefer|would you like|recommendations?/i,
+    // Questions about preferences
+    /what (kind|type|style|brand) (of|are you)|do you have any preferences/i
+  ];
+  
+  const lastMessageWasAboutProducts = productRelatedPatterns.some(pattern => 
+    pattern.test(lastAssistantMessage.content.toLowerCase())
   );
   
   // Check if the last message was asking a question
   const wasAskingQuestion = lastAssistantMessage.content.includes('?') ||
-    ['prefer', 'would you like', 'are you looking for', 'do you have', 'may i ask', 'what kind']
-      .some(phrase => lastAssistantMessage.content.toLowerCase().includes(phrase));
+    /can you|could you|would you|do you|are you|what|how|when|where|which|who|why/i.test(lastAssistantMessage.content.toLowerCase());
   
   // Check if the current query is short and looks like a direct response
-  const isShortResponse = query.split(' ').length <= 3;
+  const isShortResponse = query.trim().split(/\s+/).length <= 5;
   
   return lastMessageWasAboutProducts && wasAskingQuestion && isShortResponse;
 }
@@ -423,6 +810,7 @@ router.post('/product-recommendations', async (req, res) => {
     if (preferences.budget) {
       console.log(`Filtering by budget: ${preferences.budget}`);
       
+      // Handle predefined budget ranges
       const priceRanges: Record<string, [number, number]> = {
         'budget-friendly': [0, 50],
         'mid-range': [50, 150],
@@ -430,17 +818,51 @@ router.post('/product-recommendations', async (req, res) => {
         'any': [0, Infinity]
       };
       
-      if (preferences.budget !== 'any' && priceRanges[preferences.budget]) {
-        const [minPrice, maxPrice] = priceRanges[preferences.budget];
-        console.log(`Price range: ${minPrice} - ${maxPrice === Infinity ? 'unlimited' : maxPrice}`);
-        
-        filteredProducts = filteredProducts.filter((product: any) => {
-          const price = product.price || 0;
-          return price >= minPrice && price <= maxPrice;
-        });
-        
-        console.log(`Found ${filteredProducts.length} products in budget range`);
+      // Handle numeric budget constraints like "under 200"
+      let minPrice = 0;
+      let maxPrice = Infinity;
+      
+      // Check for "under X" or "less than X" patterns
+      const underMatch = preferences.budget.toString().match(/under\s+(\d+)/i);
+      const lessThanMatch = preferences.budget.toString().match(/less\s+than\s+(\d+)/i);
+      
+      if (underMatch || lessThanMatch) {
+        const match = underMatch || lessThanMatch;
+        maxPrice = parseInt(match[1], 10);
+        console.log(`Detected "under ${maxPrice}" budget constraint`);
+      } 
+      // Check for "over X" or "more than X" patterns
+      else if (preferences.budget.toString().match(/over\s+(\d+)/i)) {
+        minPrice = parseInt(preferences.budget.toString().match(/over\s+(\d+)/i)[1], 10);
+        console.log(`Detected "over ${minPrice}" budget constraint`);
       }
+      // Check for "between X and Y" pattern
+      else if (preferences.budget.toString().match(/between\s+(\d+)\s+and\s+(\d+)/i)) {
+        const matches = preferences.budget.toString().match(/between\s+(\d+)\s+and\s+(\d+)/i);
+        minPrice = parseInt(matches[1], 10);
+        maxPrice = parseInt(matches[2], 10);
+        console.log(`Detected "between ${minPrice} and ${maxPrice}" budget constraint`);
+      }
+      // Check for predefined ranges
+      else if (preferences.budget !== 'any' && priceRanges[preferences.budget]) {
+        [minPrice, maxPrice] = priceRanges[preferences.budget];
+      }
+      
+      console.log(`Price range: ${minPrice} - ${maxPrice === Infinity ? 'unlimited' : maxPrice}`);
+      
+      filteredProducts = filteredProducts.filter((product: any) => {
+        // Convert price to number if it's a string
+        let price = 0;
+        if (typeof product.price === 'string') {
+          price = parseFloat(product.price);
+        } else if (typeof product.price === 'number') {
+          price = product.price;
+        }
+        
+        return price >= minPrice && price <= maxPrice;
+      });
+      
+      console.log(`Found ${filteredProducts.length} products in budget range`);
     }
     
     // Filter by features if provided
@@ -876,6 +1298,75 @@ router.get('/status', async (req, res) => {
   } catch (error) {
     console.error('Error checking system status:', error);
     res.status(500).json({ error: 'Failed to check system status' });
+  }
+});
+
+// Memory management endpoints
+router.get('/memory/:sessionId', async (req, res) => {
+  try {
+    const { sessionId } = req.params;
+    
+    if (!sessionId) {
+      return res.status(400).json({ error: 'Session ID is required' });
+    }
+    
+    const context = agenticRagService.getConversationContext(sessionId);
+    const preferences = agenticRagService.getUserPreferences(sessionId);
+    
+    res.json({
+      sessionId,
+      context,
+      preferences,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('Error retrieving memory:', error);
+    res.status(500).json({ error: 'Failed to retrieve memory' });
+  }
+});
+
+router.post('/memory/:sessionId/preferences', async (req, res) => {
+  try {
+    const { sessionId } = req.params;
+    const { preferences } = req.body;
+    
+    if (!sessionId) {
+      return res.status(400).json({ error: 'Session ID is required' });
+    }
+    
+    if (!preferences || typeof preferences !== 'object') {
+      return res.status(400).json({ error: 'Preferences object is required' });
+    }
+    
+    agenticRagService.updateUserPreferences(sessionId, preferences);
+    
+    res.json({
+      sessionId,
+      preferences: agenticRagService.getUserPreferences(sessionId),
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('Error updating preferences:', error);
+    res.status(500).json({ error: 'Failed to update preferences' });
+  }
+});
+
+// System initialization endpoint
+router.post('/system/initialize', async (req, res) => {
+  try {
+    console.log('Initializing system via API...');
+    
+    // Initialize knowledge base
+    await agenticRagService.initializeKnowledgeBase();
+    
+    res.json({
+      success: true,
+      message: 'System initialized successfully',
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('Error initializing system:', error);
+    res.status(500).json({ error: 'Failed to initialize system' });
   }
 });
 

@@ -1,0 +1,42 @@
+[
+  {
+    "content": "hi",
+    "isBot": false,
+    "timestamp": "2025-08-06T21:05:53.305Z"
+  },
+  {
+    "content": "Hello! Welcome to KarjiStore. How can I assist you today? Are you looking for something special or do you have any questions about our products?",
+    "isBot": true,
+    "timestamp": "2025-08-06T21:05:53.307Z"
+  },
+  {
+    "content": "suggest me perfume",
+    "isBot": false,
+    "timestamp": "2025-08-06T21:06:03.937Z"
+  },
+  {
+    "content": "Of course! I'd love to help you find the perfect perfume. Could you tell me a bit about your preferences? For example, do you have a favorite scent family, like floral, woody, or citrus? Or is this for a particular occasion or season?",
+    "isBot": true,
+    "timestamp": "2025-08-06T21:06:03.938Z"
+  },
+  {
+    "content": "what did I ask you earlier?",
+    "isBot": false,
+    "timestamp": "2025-08-06T21:06:19.202Z"
+  },
+  {
+    "content": "You asked me to suggest a perfume. Do you have any specific preferences or occasions in mind for the perfume? I'd love to help you find the perfect one!",
+    "isBot": true,
+    "timestamp": "2025-08-06T21:06:19.209Z"
+  },
+  {
+    "content": "floral",
+    "isBot": false,
+    "timestamp": "2025-08-06T21:06:30.661Z"
+  },
+  {
+    "content": "Great choice! Floral perfumes are always a classic. Are you looking for something light and fresh, or perhaps a bit more rich and romantic? Also, do you have a preferred price range in mind?",
+    "isBot": true,
+    "timestamp": "2025-08-06T21:06:30.664Z"
+  }
+]

@@ -262,9 +262,17 @@ export class OpenRouterAIProvider implements AIProvider {
         ? [{ role: 'system', content: systemPrompt }, ...messages]
         : messages;
 
+      // Log the actual messages count
+      const userMessages = messages.filter(m => m.role === 'user').length;
+      const assistantMessages = messages.filter(m => m.role === 'assistant').length;
+      const systemMessages = messages.filter(m => m.role === 'system').length;
+      
       console.log('Generating response with OpenRouter:', {
         model: this.config.model,
-        messagesCount: messages.length,
+        messagesCount: chatMessages.length,
+        userMessages,
+        assistantMessages,
+        systemMessages,
         hasSystemPrompt: !!systemPrompt
       });
 
@@ -475,8 +483,28 @@ export class AIService {
       throw new Error('AI provider not configured');
     }
 
-    const systemPrompt = this.buildSystemPrompt(contextInfo);
-    return this.provider.generateResponse(messages, systemPrompt);
+    // Log the actual messages count for debugging with detailed breakdown
+    const userMessages = messages.filter(m => m.role === 'user').length;
+    const assistantMessages = messages.filter(m => m.role === 'assistant').length;
+    const systemMessages = messages.filter(m => m.role === 'system').length;
+    
+    console.log(`AIService.generateResponse called with ${messages.length} messages:`, {
+      userMessages,
+      assistantMessages,
+      systemMessages,
+      hasContextInfo: !!contextInfo
+    });
+    
+    // If there's a system message already in the messages, use that
+    // Otherwise, build a system prompt and add it
+    const hasSystemMessage = messages.some(msg => msg.role === 'system');
+    
+    if (hasSystemMessage || !contextInfo) {
+      return this.provider.generateResponse(messages);
+    } else {
+      const systemPrompt = this.buildSystemPrompt(contextInfo);
+      return this.provider.generateResponse(messages, systemPrompt);
+    }
   }
 
   async testConnection(): Promise<boolean> {
@@ -484,20 +512,84 @@ export class AIService {
   }
 
   private buildSystemPrompt(contextInfo?: string): string {
-    let prompt = `You are a helpful customer service representative for an e-commerce store. Your role is to:
+    let prompt = `You are a helpful customer service assistant for KarjiStore, specializing in premium perfumes, watches, and luxury gifts. Be friendly, professional, and CONVERSATIONAL.
 
-1. Assist customers with their inquiries in a friendly, professional manner
-2. Help with order tracking, product recommendations, and general questions
-3. Ask relevant follow-up questions to better understand customer needs
-4. Provide accurate information based on the available data
-5. If you don't know something, politely say so and offer to help find the information
+CRITICAL RESPONSE GUIDELINES:
+- Keep responses SHORT and CONCISE (1-2 sentences maximum)
+- Ask only ONE question at a time, not multiple questions
+- NEVER list product details in text format - products should only be shown as cards
+- Focus on conversational flow and natural dialogue
+- Be warm and engaging but brief
 
-Guidelines:
-- Be conversational and empathetic
-- Keep responses concise but helpful
-- Always maintain a positive, solution-oriented tone
-- Use the customer's name when appropriate
-- Offer additional assistance at the end of your responses`;
+CONVERSATIONAL FLOW:
+- Ask ONE clarifying question at a time
+- Wait for user response before asking the next question
+- Build context gradually through conversation
+- Use natural transitions between topics
+- Maintain conversation state and context
+
+STEP-BY-STEP PREFERENCE COLLECTION:
+- Start with basic category/gender if not specified
+- Then ask about style preference (classic, modern, sporty, elegant)
+- Then ask about budget range
+- Then ask about specific features if needed
+- NEVER ask all preferences at once
+
+PRODUCT DISPLAY RULES:
+- NEVER describe products in text format
+- Products should ONLY be displayed as cards/buttons
+- If products are available, show them as cards without text descriptions
+- Keep product recommendations brief and focused
+
+CONVERSATION MEMORY:
+- ALWAYS consider the conversation history
+- Remember what the user has already told you
+- Build on previous responses
+- Don't repeat questions already answered
+- Use context from the conversation history
+
+PREFERENCE COLLECTION BEFORE PRODUCTS:
+- NEVER show products until you have collected sufficient preferences
+- For generic queries like "women watches", ask about style first
+- For "classic" responses, ask about budget next
+- Only show products after collecting style AND budget preferences
+- If user gives multiple preferences at once, acknowledge them and ask for the next one
+
+MANDATORY RULES:
+- If user asks for "women watches" → Ask for style preference ONLY
+- If user says "classic" → Ask for budget preference ONLY  
+- If user gives budget → Show products ONLY if style was already collected
+- NEVER show products for generic queries without collecting preferences first
+- NEVER ask multiple questions at once
+- ALWAYS build conversation step by step
+
+EXAMPLES OF GOOD RESPONSES:
+✅ "Great! I found some women's watches for you. What style are you looking for - classic, modern, or sporty?"
+✅ "Perfect! Now what's your budget range?"
+✅ "Here are some elegant watches in your price range: [product cards]"
+❌ "I have many watches. What's your style, budget, features, occasion, and brand preference?"
+❌ "Here's a detailed description of each watch with specifications..."
+❌ Showing products without asking preferences first
+
+PRODUCT KNOWLEDGE:
+- KarjiStore specializes in premium perfumes, watches, and luxury gifts
+- Our products range from affordable to high-end luxury items
+- We offer international shipping and have a 30-day return policy
+
+ORDER HANDLING:
+- To track orders, you need the customer's email and order number
+- Order statuses include: pending, processing, shipped, delivered, and cancelled
+
+RESPONSE STYLE:
+- Keep responses under 2 sentences
+- Be conversational and natural
+- Ask one question at a time
+- Show products as cards only
+
+ERROR HANDLING:
+- If you encounter technical issues, gracefully explain the situation
+- Offer alternative ways to help the customer
+- Never expose internal system details to customers`;
 
     if (this.config?.customInstructions) {
       prompt += `\n\nAdditional Instructions:\n${this.config.customInstructions}`;

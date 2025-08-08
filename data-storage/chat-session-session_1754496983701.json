@@ -1,0 +1,12 @@
+[
+  {
+    "content": "suggest me perfumes",
+    "isBot": false,
+    "timestamp": "2025-08-06T16:16:28.689Z"
+  },
+  {
+    "content": "Welcome to KarjiStore! I'd be happy to help you find the perfect perfume. To get started, could you tell me a bit more about what you're looking for? Are you looking for a specific scent, like floral, woody, or something else? Or are you looking for a particular brand? Also, do you have a preferred price range?",
+    "isBot": true,
+    "timestamp": "2025-08-06T16:16:28.691Z"
+  }
+]

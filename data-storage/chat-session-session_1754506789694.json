@@ -1,0 +1,12 @@
+[
+  {
+    "content": "give me perfumes from range 100-200 aed",
+    "isBot": false,
+    "timestamp": "2025-08-06T18:59:51.840Z"
+  },
+  {
+    "content": "Hello! I'd be happy to help you find a perfume within your budget range. To give you the best recommendations, could you tell me if you're looking for a specific scent or occasion? Are you looking for something for yourself or as a gift?",
+    "isBot": true,
+    "timestamp": "2025-08-06T18:59:51.841Z"
+  }
+]

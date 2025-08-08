@@ -1,0 +1,12 @@
+[
+  {
+    "content": "Tell me about your store",
+    "isBot": false,
+    "timestamp": "2025-08-08T02:53:27.712Z"
+  },
+  {
+    "content": "I'm sorry, I encountered an error while processing your request. Please try again later.",
+    "isBot": true,
+    "timestamp": "2025-08-08T02:53:27.714Z"
+  }
+]

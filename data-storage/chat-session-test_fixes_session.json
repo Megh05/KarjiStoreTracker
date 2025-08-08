@@ -1,0 +1,32 @@
+[
+  {
+    "content": "suggest me perfume",
+    "isBot": false,
+    "timestamp": "2025-08-06T19:35:16.031Z"
+  },
+  {
+    "content": "Of course! I'd be happy to help you find the perfect perfume. Do you have a particular scent in mind, like floral, woody, or something more citrusy? Also, is it for a special occasion or for everyday use? Let me know so I can recommend something that suits your preferences!",
+    "isBot": true,
+    "timestamp": "2025-08-06T19:35:16.034Z"
+  },
+  {
+    "content": "floral",
+    "isBot": false,
+    "timestamp": "2025-08-06T19:35:38.463Z"
+  },
+  {
+    "content": "Great choice! Floral perfumes are always a classic. Are you looking for something more light and fresh, or perhaps a bit deeper and more romantic? Also, do you have a preferred price range or any favorite brands in mind? This will help me narrow down the perfect options for you.",
+    "isBot": true,
+    "timestamp": "2025-08-06T19:35:38.465Z"
+  },
+  {
+    "content": "what did I ask you earlier?",
+    "isBot": false,
+    "timestamp": "2025-08-06T19:37:56.201Z"
+  },
+  {
+    "content": "You mentioned you're interested in a floral perfume. Would you like something light and fresh, or more on the romantic side? And do you have any price range or favorite brands in mind? Let me know so I can help you find the perfect scent!",
+    "isBot": true,
+    "timestamp": "2025-08-06T19:37:56.212Z"
+  }
+]

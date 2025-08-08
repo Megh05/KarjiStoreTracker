@@ -1,0 +1,62 @@
+[
+  {
+    "content": "hello",
+    "isBot": false,
+    "timestamp": "2025-08-06T18:53:51.219Z"
+  },
+  {
+    "content": "Hello! Welcome to KarjiStore! How can I assist you today? Are you looking for a specific product or need help with an order?",
+    "isBot": true,
+    "timestamp": "2025-08-06T18:53:51.221Z"
+  },
+  {
+    "content": "tell me about your perfumes",
+    "isBot": false,
+    "timestamp": "2025-08-06T18:54:10.367Z"
+  },
+  {
+    "content": "Hello! I'm glad you're interested in our perfumes. KarjiStore offers a wide range of premium perfumes to suit every taste and occasion. Our collection includes classic scents as well as modern fragrances, all designed to make you feel confident and attractive.\n\nWould you like to know more about our best-selling perfumes or perhaps you're looking for something specific?",
+    "isBot": true,
+    "timestamp": "2025-08-06T18:54:10.370Z"
+  },
+  {
+    "content": "what did I ask you earlier?",
+    "isBot": false,
+    "timestamp": "2025-08-06T18:57:06.285Z"
+  },
+  {
+    "content": "You asked me to tell you about our perfumes.",
+    "isBot": true,
+    "timestamp": "2025-08-06T18:57:06.286Z"
+  },
+  {
+    "content": "what did I ask you earlier?",
+    "isBot": false,
+    "timestamp": "2025-08-06T19:07:34.998Z"
+  },
+  {
+    "content": "You first said \"hello\" and then asked about our perfumes. Is there anything specific you'd like to know about our perfume collection?",
+    "isBot": true,
+    "timestamp": "2025-08-06T19:07:35.006Z"
+  },
+  {
+    "content": "what did I ask you earlier?",
+    "isBot": false,
+    "timestamp": "2025-08-06T19:07:55.097Z"
+  },
+  {
+    "content": "You initially greeted me with \"hello\" and then asked me to tell you about our perfumes. Is there anything else you’d like to explore or any specific questions you have about our products?",
+    "isBot": true,
+    "timestamp": "2025-08-06T19:07:55.115Z"
+  },
+  {
+    "content": "what was my last question?",
+    "isBot": false,
+    "timestamp": "2025-08-06T19:08:12.959Z"
+  },
+  {
+    "content": "Your last question was, \"what did I ask you earlier?\" Is there anything else you'd like to know or discuss? I'm here to help!",
+    "isBot": true,
+    "timestamp": "2025-08-06T19:08:12.960Z"
+  }
+]

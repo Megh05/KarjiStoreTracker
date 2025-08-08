@@ -1,0 +1,92 @@
+[
+  {
+    "content": "Hello",
+    "isBot": false,
+    "timestamp": "2025-08-07T13:59:32.286Z"
+  },
+  {
+    "content": "Hi there! Welcome to KarjiStore. How can I assist you today?",
+    "isBot": true,
+    "timestamp": "2025-08-07T13:59:32.288Z"
+  },
+  {
+    "content": "Hello",
+    "isBot": false,
+    "timestamp": "2025-08-07T13:59:32.392Z"
+  },
+  {
+    "content": "Hello! Welcome to KarjiStore. How can I assist you today?",
+    "isBot": true,
+    "timestamp": "2025-08-07T13:59:32.394Z"
+  },
+  {
+    "content": "Hello",
+    "isBot": false,
+    "timestamp": "2025-08-07T13:59:32.398Z"
+  },
+  {
+    "content": "Hello! Welcome to KarjiStore. How can I assist you today?",
+    "isBot": true,
+    "timestamp": "2025-08-07T13:59:32.399Z"
+  },
+  {
+    "content": "Tell me about your perfumes",
+    "isBot": false,
+    "timestamp": "2025-08-07T13:59:39.945Z"
+  },
+  {
+    "content": "We offer a fantastic selection of premium perfumes for both men and women at KarjiStore. To help you find the perfect scent, may I know who you’re shopping for?",
+    "isBot": true,
+    "timestamp": "2025-08-07T13:59:39.948Z"
+  },
+  {
+    "content": "Tell me about your perfumes",
+    "isBot": false,
+    "timestamp": "2025-08-07T13:59:43.333Z"
+  },
+  {
+    "content": "We have a wonderful selection of perfumes! Do you have a specific brand or type in mind?",
+    "isBot": true,
+    "timestamp": "2025-08-07T13:59:43.334Z"
+  },
+  {
+    "content": "Tell me about your perfumes",
+    "isBot": false,
+    "timestamp": "2025-08-07T13:59:43.336Z"
+  },
+  {
+    "content": "We offer a fantastic selection of premium perfumes for both men and women at KarjiStore. To help you find the perfect scent, may I know who you’re shopping for?",
+    "isBot": true,
+    "timestamp": "2025-08-07T13:59:43.337Z"
+  },
+  {
+    "content": "Do you have any floral scents?",
+    "isBot": false,
+    "timestamp": "2025-08-07T13:59:52.650Z"
+  },
+  {
+    "content": "Yes, we have beautiful floral scents! Do you prefer them for men or women?",
+    "isBot": true,
+    "timestamp": "2025-08-07T13:59:52.651Z"
+  },
+  {
+    "content": "What about for men?",
+    "isBot": false,
+    "timestamp": "2025-08-07T13:59:58.116Z"
+  },
+  {
+    "content": "Great choice! We have a wonderful range of men's perfumes. What kind of scent are you looking for? Classic, fresh, or something more oriental?",
+    "isBot": true,
+    "timestamp": "2025-08-07T13:59:58.117Z"
+  },
+  {
+    "content": "What about for men?",
+    "isBot": false,
+    "timestamp": "2025-08-07T13:59:58.119Z"
+  },
+  {
+    "content": "Great choice! We have a wonderful range of men's perfumes. What kind of scent are you looking for? Classic, fresh, or something more oriental?",
+    "isBot": true,
+    "timestamp": "2025-08-07T13:59:58.122Z"
+  }
+]

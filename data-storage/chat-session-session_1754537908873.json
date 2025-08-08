@@ -1,0 +1,22 @@
+[
+  {
+    "content": "show me watches",
+    "isBot": false,
+    "timestamp": "2025-08-07T03:38:35.915Z"
+  },
+  {
+    "content": "Sure! We have a great selection of watches. What style are you looking for—classic, modern, or sporty?",
+    "isBot": true,
+    "timestamp": "2025-08-07T03:38:35.916Z"
+  },
+  {
+    "content": "show me watches",
+    "isBot": false,
+    "timestamp": "2025-08-07T03:38:40.443Z"
+  },
+  {
+    "content": "Sure, I can help with that. What kind of watches are you looking for? Men's, women's, or unisex?",
+    "isBot": true,
+    "timestamp": "2025-08-07T03:38:40.447Z"
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "content": "I'm looking for perfumes",
+    "isBot": false,
+    "timestamp": "2025-08-07T14:43:11.584Z"
+  },
+  {
+    "content": "Great! What kind of scent are you looking for?",
+    "isBot": true,
+    "timestamp": "2025-08-07T14:43:11.587Z"
+  },
+  {
+    "content": "Show me men's perfumes",
+    "isBot": false,
+    "timestamp": "2025-08-07T14:43:25.132Z"
+  },
+  {
+    "content": "For men? What style are you interested in, classic or modern?",
+    "isBot": true,
+    "timestamp": "2025-08-07T14:43:25.135Z"
+  },
+  {
+    "content": "Show me some classic men's perfumes under $200",
+    "isBot": false,
+    "timestamp": "2025-08-07T14:43:38.058Z"
+  },
+  {
+    "content": "The OpenRouter API is rate limiting requests. Please try again later.",
+    "isBot": true,
+    "timestamp": "2025-08-07T14:43:38.066Z"
+  }
+]

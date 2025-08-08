@@ -1,0 +1,22 @@
+[
+  {
+    "content": "show me perfumes under 200 aed",
+    "isBot": false,
+    "timestamp": "2025-08-08T01:43:44.319Z"
+  },
+  {
+    "content": "Great! I found some perfumes under 200 AED for you. Here they are:",
+    "isBot": true,
+    "timestamp": "2025-08-08T01:43:44.319Z"
+  },
+  {
+    "content": "show me watches between 500 and 1000 aed",
+    "isBot": false,
+    "timestamp": "2025-08-08T01:43:50.091Z"
+  },
+  {
+    "content": "I'm searching for watches between 500 and 1000 AED for you. Please hold on for a moment.",
+    "isBot": true,
+    "timestamp": "2025-08-08T01:43:50.091Z"
+  }
+]

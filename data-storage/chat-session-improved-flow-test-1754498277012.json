@@ -1,0 +1,52 @@
+[
+  {
+    "content": "hi",
+    "isBot": false,
+    "timestamp": "2025-08-06T16:37:59.070Z"
+  },
+  {
+    "content": "Hello! Welcome to KarjiStore. How can I assist you today? Are you looking for a specific product or need help with an order?",
+    "isBot": true,
+    "timestamp": "2025-08-06T16:37:59.074Z"
+  },
+  {
+    "content": "i want to buy perfumes",
+    "isBot": false,
+    "timestamp": "2025-08-06T16:38:02.362Z"
+  },
+  {
+    "content": "Hello! Welcome to KarjiStore. We have a wide selection of premium perfumes for both men and women. What type of scent are you looking for? Do you have a preferred brand or fragrance family?",
+    "isBot": true,
+    "timestamp": "2025-08-06T16:38:02.363Z"
+  },
+  {
+    "content": "floral scent",
+    "isBot": false,
+    "timestamp": "2025-08-06T16:38:07.950Z"
+  },
+  {
+    "content": "Great choice! Floral scents are always a popular choice. Do you have a favorite floral note or any specific brands you're interested in?",
+    "isBot": true,
+    "timestamp": "2025-08-06T16:38:07.951Z"
+  },
+  {
+    "content": "budget around 500 AED",
+    "isBot": false,
+    "timestamp": "2025-08-06T16:38:10.984Z"
+  },
+  {
+    "content": "Thank you for letting me know your budget. We have some beautiful floral fragrances within that price range. Would you like me to recommend some specific brands or scents that are known for their floral notes?",
+    "isBot": true,
+    "timestamp": "2025-08-06T16:38:10.985Z"
+  },
+  {
+    "content": "show me some options",
+    "isBot": false,
+    "timestamp": "2025-08-06T16:38:15.416Z"
+  },
+  {
+    "content": "Of course! Here are some floral perfumes within your budget of 500 AED:\n\n1. **Dior J'adore Eau de Parfum**\n   - A classic floral scent with notes of orange blossom, jasmine, and rose.\n   - Price: 450 AED\n\n2. **Yves Saint Laurent Black Opium**\n   - A modern take on the floral scent with notes of coffee, vanilla, and orange blossom.\n   - Price: 480 AED\n\n3. **Chanel Coco Mademoiselle**\n   - A sophisticated floral scent with notes of orange blossom, rose, and vanilla.\n   - Price: 490 AED\n\n4. **Guerlain Shalimar**\n   - A timeless floral scent with notes of vanilla, orange blossom, and sandalwood.\n   - Price: 470 AED\n\n5. **Lancôme La Vie Est Belle**\n   - A sweet and romantic floral scent with notes of orange blossom, raspberry, and vanilla.\n   - Price: 460 AED\n\nThese fragrances are all highly rated and should provide you with a lovely floral scent. Would you like more details on any of these or assistance with anything else?",
+    "isBot": true,
+    "timestamp": "2025-08-06T16:38:15.417Z"
+  }
+]

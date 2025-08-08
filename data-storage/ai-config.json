@@ -3,11 +3,11 @@
   "provider": "openrouter",
   "config": {
     "endpoint": "http://localhost:11434",
-    "model": "mistralai/mistral-large-2411",
-    "apiKey": "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"
+    "model": "mistralai/mistral-small-24b-instruct-2501:free",
+    "apiKey": "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"
   },
-  "customInstructions": "Test custom instructions",
+  "customInstructions": "You are a helpful customer service assistant for KarjiStore, specializing in premium perfumes, watches, and luxury gifts. Be conversational, ask follow-up questions to understand customer needs, and provide personalized recommendations.",
   "isActive": true,
   "createdOnUtc": "2025-08-03T03:22:15.875Z",
-  "updatedOnUtc": "2025-08-04T17:19:28.940Z"
+  "updatedOnUtc": "2025-08-08T14:38:24.206Z"
 }

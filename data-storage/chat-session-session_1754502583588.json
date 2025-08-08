@@ -1,0 +1,12 @@
+[
+  {
+    "content": "hi",
+    "isBot": false,
+    "timestamp": "2025-08-06T17:49:46.502Z"
+  },
+  {
+    "content": "Hello! Welcome to KarjiStore! How can I assist you today? Are you looking for a specific product or have a question about your order? Let me know how I can help! 😊",
+    "isBot": true,
+    "timestamp": "2025-08-06T17:49:46.504Z"
+  }
+]

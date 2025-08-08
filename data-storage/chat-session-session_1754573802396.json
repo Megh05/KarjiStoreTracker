@@ -1,0 +1,12 @@
+[
+  {
+    "content": "suggest me perfume",
+    "isBot": false,
+    "timestamp": "2025-08-07T13:36:52.202Z"
+  },
+  {
+    "content": "What type of perfume scent are you looking for - floral, fresh, or oriental?",
+    "isBot": true,
+    "timestamp": "2025-08-07T13:36:52.203Z"
+  }
+]

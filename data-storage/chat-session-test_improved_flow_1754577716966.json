@@ -1,0 +1,62 @@
+[
+  {
+    "content": "I'm looking for perfumes",
+    "isBot": false,
+    "timestamp": "2025-08-07T14:42:05.056Z"
+  },
+  {
+    "content": "Great! What style of perfume are you looking for?",
+    "isBot": true,
+    "timestamp": "2025-08-07T14:42:05.057Z"
+  },
+  {
+    "content": "Show me men's perfumes",
+    "isBot": false,
+    "timestamp": "2025-08-07T14:42:17.691Z"
+  },
+  {
+    "content": "Great! We have a fantastic selection of men's perfumes. What style are you looking for - classic, modern, or sporty?",
+    "isBot": true,
+    "timestamp": "2025-08-07T14:42:17.692Z"
+  },
+  {
+    "content": "Show me men's perfumes",
+    "isBot": false,
+    "timestamp": "2025-08-07T14:42:18.675Z"
+  },
+  {
+    "content": "Perfect! I can show you some perfumes, but first can you give me an idea of your budget?",
+    "isBot": true,
+    "timestamp": "2025-08-07T14:42:18.676Z"
+  },
+  {
+    "content": "Show me men's perfumes",
+    "isBot": false,
+    "timestamp": "2025-08-07T14:42:18.678Z"
+  },
+  {
+    "content": "Great! We have a fantastic selection of men's perfumes. What style are you looking for - classic, modern, or sporty?",
+    "isBot": true,
+    "timestamp": "2025-08-07T14:42:18.679Z"
+  },
+  {
+    "content": "Sure, I'd like to see some options",
+    "isBot": false,
+    "timestamp": "2025-08-07T14:42:32.208Z"
+  },
+  {
+    "content": "Before I show you some options, could you please tell me your budget range?",
+    "isBot": true,
+    "timestamp": "2025-08-07T14:42:32.209Z"
+  },
+  {
+    "content": "Sure, I'd like to see some options",
+    "isBot": false,
+    "timestamp": "2025-08-07T14:42:32.210Z"
+  },
+  {
+    "content": "Before I show you some options, could you please tell me your budget range?",
+    "isBot": true,
+    "timestamp": "2025-08-07T14:42:32.213Z"
+  }
+]

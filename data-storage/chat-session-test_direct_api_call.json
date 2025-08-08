@@ -1,0 +1,22 @@
+[
+  {
+    "content": "show me watches between 500 and 1000 aed",
+    "isBot": false,
+    "timestamp": "2025-08-07T21:21:56.194Z"
+  },
+  {
+    "content": "I found some watches within your price range. Here are a few recommendations:",
+    "isBot": true,
+    "timestamp": "2025-08-07T21:21:56.194Z"
+  },
+  {
+    "content": "show me watches between 500 and 1000 aed",
+    "isBot": false,
+    "timestamp": "2025-08-07T21:22:36.787Z"
+  },
+  {
+    "content": "I found some watches within your price range. Here are a few recommendations:",
+    "isBot": true,
+    "timestamp": "2025-08-07T21:22:36.787Z"
+  }
+]

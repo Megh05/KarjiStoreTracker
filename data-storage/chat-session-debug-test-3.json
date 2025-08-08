@@ -1,0 +1,12 @@
+[
+  {
+    "content": "i want to buy perfumes",
+    "isBot": false,
+    "timestamp": "2025-08-06T16:35:43.923Z"
+  },
+  {
+    "content": "Hello! Welcome to KarjiStore! We have a wide range of premium perfumes to suit every taste. What type of scent are you looking for? Are you looking for something fresh and light, or perhaps something more intense and long-lasting?",
+    "isBot": true,
+    "timestamp": "2025-08-06T16:35:43.933Z"
+  }
+]

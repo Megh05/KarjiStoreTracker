@@ -5,6 +5,7 @@ import { aiService } from "./services/ai-service";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { agenticRagService } from './services/agentic-rag-service'; // Import the new agentic RAG service
 
 // Get the directory name in ESM
 const __filename = fileURLToPath(import.meta.url);

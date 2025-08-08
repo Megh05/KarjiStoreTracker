@@ -1,0 +1,52 @@
+[
+  {
+    "content": "hi",
+    "isBot": false,
+    "timestamp": "2025-08-06T16:37:03.790Z"
+  },
+  {
+    "content": "Hello! Welcome to KarjiStore. How can I assist you today? Are you looking for a specific product or have a question about your order?",
+    "isBot": true,
+    "timestamp": "2025-08-06T16:37:03.791Z"
+  },
+  {
+    "content": "i want to buy perfumes",
+    "isBot": false,
+    "timestamp": "2025-08-06T16:37:06.965Z"
+  },
+  {
+    "content": "Hello! Welcome to KarjiStore. We have a wide range of premium perfumes to suit every taste and occasion. What type of fragrance are you looking for? Do you have a preferred brand or a specific scent in mind?",
+    "isBot": true,
+    "timestamp": "2025-08-06T16:37:06.973Z"
+  },
+  {
+    "content": "floral scent",
+    "isBot": false,
+    "timestamp": "2025-08-06T16:37:11.658Z"
+  },
+  {
+    "content": "Great choice! Floral scents are always a popular choice. Do you have a specific brand or fragrance in mind, or would you like some recommendations based on your preferences?",
+    "isBot": true,
+    "timestamp": "2025-08-06T16:37:11.659Z"
+  },
+  {
+    "content": "budget around 500 AED",
+    "isBot": false,
+    "timestamp": "2025-08-06T16:37:16.778Z"
+  },
+  {
+    "content": "Great! With a budget of around 500 AED, you have a lovely range of floral perfumes to choose from. Do you have a preferred brand or any specific notes you like in a floral scent (e.g., rose, jasmine, peony)?",
+    "isBot": true,
+    "timestamp": "2025-08-06T16:37:16.780Z"
+  },
+  {
+    "content": "show me some options",
+    "isBot": false,
+    "timestamp": "2025-08-06T16:37:22.795Z"
+  },
+  {
+    "content": "Absolutely, I'd be happy to help! Given your preference for floral scents and a budget of around 500 AED, here are a few options you might like:\n\n1. **Chanel No. 5 Eau de Parfum**\n   - A classic and timeless fragrance with notes of rose, jasmine, and ylang-ylang.\n   - Price: Approximately 500 AED\n\n2. **Yves Saint Laurent Black Opium**\n   - A modern and seductive scent with notes of coffee, vanilla, and jasmine.\n   - Price: Approximately 450 AED\n\n3. **Dior J'adore Eau de Parfum**\n   - A romantic and feminine fragrance with notes of rose, peony, and orange blossom.\n   - Price: Approximately 480 AED\n\n4. **Guerlain Shalimar**\n   - A rich and oriental scent with notes of vanilla, orange blossom, and tonka bean.\n   - Price: Approximately 400 AED\n\n5. **Givenchy Le Rouge**\n   - A modern and playful fragrance with notes of peony, rose, and vanilla.\n   - Price: Approximately 450 AED\n\nWould you like more details on any of these options, or would you prefer to explore other brands or fragrances?",
+    "isBot": true,
+    "timestamp": "2025-08-06T16:37:22.796Z"
+  }
+]

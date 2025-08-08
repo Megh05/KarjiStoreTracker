@@ -1,0 +1,62 @@
+[
+  {
+    "content": "Hello",
+    "isBot": false,
+    "timestamp": "2025-08-06T16:25:09.230Z"
+  },
+  {
+    "content": "Hello! Welcome to KarjiStore! How can I assist you today? Are you looking for a specific product or need help with something else?",
+    "isBot": true,
+    "timestamp": "2025-08-06T16:25:09.231Z"
+  },
+  {
+    "content": "I want to buy perfumes",
+    "isBot": false,
+    "timestamp": "2025-08-06T16:25:11.782Z"
+  },
+  {
+    "content": "Hello! Welcome to KarjiStore! We're excited to help you find the perfect perfume. Do you have a specific brand or scent in mind, or would you like some recommendations based on your preferences?",
+    "isBot": true,
+    "timestamp": "2025-08-06T16:25:11.784Z"
+  },
+  {
+    "content": "I like floral scents",
+    "isBot": false,
+    "timestamp": "2025-08-06T16:25:14.912Z"
+  },
+  {
+    "content": "Great! Floral scents are always a popular choice. Do you have a favorite floral scent or any specific notes you prefer? For example, do you like rose, jasmine, or perhaps something more exotic like ylang-ylang or tuberose?",
+    "isBot": true,
+    "timestamp": "2025-08-06T16:25:14.913Z"
+  },
+  {
+    "content": "What about woody scents instead?",
+    "isBot": false,
+    "timestamp": "2025-08-06T16:25:26.333Z"
+  },
+  {
+    "content": "That's a great question! Woody scents can be quite versatile and are often associated with a more masculine or sophisticated vibe. Do you have any specific woody notes you prefer, like sandalwood, cedarwood, or patchouli?",
+    "isBot": true,
+    "timestamp": "2025-08-06T16:25:26.334Z"
+  },
+  {
+    "content": "I have a budget of 500 AED",
+    "isBot": false,
+    "timestamp": "2025-08-06T16:25:29.340Z"
+  },
+  {
+    "content": "Got it! With a budget of 500 AED, we have some great options for you. Do you have a specific brand or scent you're interested in, or would you like some recommendations based on your preference for woody scents?",
+    "isBot": true,
+    "timestamp": "2025-08-06T16:25:29.351Z"
+  },
+  {
+    "content": "Show me some floral perfumes under 300 AED",
+    "isBot": false,
+    "timestamp": "2025-08-06T16:25:35.750Z"
+  },
+  {
+    "content": "Sure thing! Here are some floral perfumes under 300 AED that you might like:\n\n1. **Chanel No. 5 Eau de Parfum** - A classic floral scent with notes of aldehydes, rose, jasmine, and ylang-ylang.\n2. **Yves Saint Laurent Black Opium** - A sweet and oriental floral scent with notes of coffee, vanilla, and jasmine.\n3. **Dior J'adore** - A fresh and romantic floral scent with notes of peony, orange blossom, and vanilla.\n4. **Guerlain Shalimar** - A rich and oriental floral scent with notes of vanilla, tonka bean, and bergamot.\n5. **Lancôme La Vie Est Belle** - A sweet and gourmand floral scent with notes of orange blossom, peony, and vanilla.\n\nThese perfumes are all within your budget and offer a range of floral scents to choose from. Do you have a preferred brand or any specific notes you'd like to highlight?",
+    "isBot": true,
+    "timestamp": "2025-08-06T16:25:35.750Z"
+  }
+]

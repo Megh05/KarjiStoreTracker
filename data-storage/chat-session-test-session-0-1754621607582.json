@@ -1,0 +1,12 @@
+[
+  {
+    "content": "Hello, I'm looking for a perfume for my wife's birthday",
+    "isBot": false,
+    "timestamp": "2025-08-08T02:53:27.630Z"
+  },
+  {
+    "content": "I'm sorry, I encountered an error while processing your request. Please try again later.",
+    "isBot": true,
+    "timestamp": "2025-08-08T02:53:27.631Z"
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "content": "hi",
+    "isBot": false,
+    "timestamp": "2025-08-06T16:23:28.724Z"
+  },
+  {
+    "content": "Hello! Welcome to KarjiStore. How can I assist you today? Are you looking for a specific product or need help with something else?",
+    "isBot": true,
+    "timestamp": "2025-08-06T16:23:28.732Z"
+  },
+  {
+    "content": "suggest me perfumes",
+    "isBot": false,
+    "timestamp": "2025-08-06T16:23:33.255Z"
+  },
+  {
+    "content": "Hello! I'd be happy to help you find the perfect perfume. Could you tell me a bit more about your preferences? Are you looking for a specific scent or occasion? Do you prefer a particular brand or style?",
+    "isBot": true,
+    "timestamp": "2025-08-06T16:23:33.256Z"
+  },
+  {
+    "content": "floral",
+    "isBot": false,
+    "timestamp": "2025-08-06T16:23:38.120Z"
+  },
+  {
+    "content": "Great! Floral scents are always a lovely choice. Do you have a favorite floral note or any specific flowers you like? For example, do you prefer roses, jasmine, or something else? Also, are you looking for a daytime or evening scent?",
+    "isBot": true,
+    "timestamp": "2025-08-06T16:23:38.121Z"
+  },
+  {
+    "content": "what about woody scents?",
+    "isBot": false,
+    "timestamp": "2025-08-06T16:23:43.240Z"
+  },
+  {
+    "content": "Sure, woody scents are also very popular and can be quite versatile. Do you have a preference for a specific type of wood or any particular notes you like in a woody scent? Are you looking for something fresh and clean or more earthy and warm?",
+    "isBot": true,
+    "timestamp": "2025-08-06T16:23:43.240Z"
+  }
+]

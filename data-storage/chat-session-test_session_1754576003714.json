@@ -1,0 +1,72 @@
+[
+  {
+    "content": "Hello",
+    "isBot": false,
+    "timestamp": "2025-08-07T14:13:30.806Z"
+  },
+  {
+    "content": "Hello! Welcome to KarjiStore. How can I assist you today?",
+    "isBot": true,
+    "timestamp": "2025-08-07T14:13:30.807Z"
+  },
+  {
+    "content": "Hello",
+    "isBot": false,
+    "timestamp": "2025-08-07T14:13:32.723Z"
+  },
+  {
+    "content": "Hi there! Welcome to KarjiStore. How can I assist you today?",
+    "isBot": true,
+    "timestamp": "2025-08-07T14:13:32.769Z"
+  },
+  {
+    "content": "Hello",
+    "isBot": false,
+    "timestamp": "2025-08-07T14:13:32.770Z"
+  },
+  {
+    "content": "Hi there! Welcome to KarjiStore. How can I assist you today?",
+    "isBot": true,
+    "timestamp": "2025-08-07T14:13:32.773Z"
+  },
+  {
+    "content": "Tell me about your perfumes",
+    "isBot": false,
+    "timestamp": "2025-08-07T14:13:42.541Z"
+  },
+  {
+    "content": "We have a wide range of perfumes for both men and women. Could you please specify the gender for the perfume you are looking for?",
+    "isBot": true,
+    "timestamp": "2025-08-07T14:13:42.542Z"
+  },
+  {
+    "content": "Do you have any floral scents?",
+    "isBot": false,
+    "timestamp": "2025-08-07T14:13:50.199Z"
+  },
+  {
+    "content": "I found some floral perfumes for you. Do you have a specific brand in mind, or shall I show you the options we have?",
+    "isBot": true,
+    "timestamp": "2025-08-07T14:13:50.212Z"
+  },
+  {
+    "content": "What about for men?",
+    "isBot": false,
+    "timestamp": "2025-08-07T14:13:57.293Z"
+  },
+  {
+    "content": "Great! We have a wonderful selection of men's watches, perfumes, and luxury gifts. What are you interested in today?",
+    "isBot": true,
+    "timestamp": "2025-08-07T14:13:57.294Z"
+  },
+  {
+    "content": "What about for men?",
+    "isBot": false,
+    "timestamp": "2025-08-07T14:13:57.296Z"
+  },
+  {
+    "content": "Great! We have a wonderful selection of men's watches, perfumes, and luxury gifts. What are you interested in today?",
+    "isBot": true,
+    "timestamp": "2025-08-07T14:13:57.298Z"
+  }
+]

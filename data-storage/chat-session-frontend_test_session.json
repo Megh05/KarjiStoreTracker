@@ -1,0 +1,32 @@
+[
+  {
+    "content": "hi",
+    "isBot": false,
+    "timestamp": "2025-08-06T21:12:15.012Z"
+  },
+  {
+    "content": "Hello! How can I assist you today? Are you looking for something special or do you have any questions about our products?",
+    "isBot": true,
+    "timestamp": "2025-08-06T21:12:15.027Z"
+  },
+  {
+    "content": "suggest me perfume",
+    "isBot": false,
+    "timestamp": "2025-08-06T21:12:26.390Z"
+  },
+  {
+    "content": "Sure thing! Are you looking for a perfume for yourself or as a gift? Also, do you have a preferred scent profile, like floral, woody, or fresh? Let me know so I can make the best recommendation for you!",
+    "isBot": true,
+    "timestamp": "2025-08-06T21:12:26.391Z"
+  },
+  {
+    "content": "what did I ask you earlier?",
+    "isBot": false,
+    "timestamp": "2025-08-06T21:12:36.454Z"
+  },
+  {
+    "content": "You asked me to suggest a perfume. Would you like to tell me more about what you're looking for so I can help you find the perfect scent?",
+    "isBot": true,
+    "timestamp": "2025-08-06T21:12:36.457Z"
+  }
+]

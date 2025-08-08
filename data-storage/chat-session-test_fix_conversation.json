@@ -1,0 +1,82 @@
+[
+  {
+    "content": "hi",
+    "isBot": false,
+    "timestamp": "2025-08-06T20:02:37.088Z"
+  },
+  {
+    "content": "Hello! Welcome to KarjiStore. How can I assist you today? 😊",
+    "isBot": true,
+    "timestamp": "2025-08-06T20:02:37.091Z"
+  },
+  {
+    "content": "suggest me perfume",
+    "isBot": false,
+    "timestamp": "2025-08-06T20:03:04.781Z"
+  },
+  {
+    "content": "Of course! I'd love to help you find the perfect perfume. Are you looking for something for yourself or as a gift? And do you have any preferred fragrance notes, like floral, woody, or citrus?",
+    "isBot": true,
+    "timestamp": "2025-08-06T20:03:04.788Z"
+  },
+  {
+    "content": "floral",
+    "isBot": false,
+    "timestamp": "2025-08-06T20:03:22.840Z"
+  },
+  {
+    "content": "Great choice! Floral perfumes are lovely and timeless. Do you have a specific occasion in mind for this perfume, or is it for everyday wear? Also, what's your preferred price range? This will help me suggest the best options for you. 🌸",
+    "isBot": true,
+    "timestamp": "2025-08-06T20:03:22.843Z"
+  },
+  {
+    "content": "what did I ask you earlier?",
+    "isBot": false,
+    "timestamp": "2025-08-06T20:03:40.784Z"
+  },
+  {
+    "content": "You asked me to suggest a perfume and mentioned that you're interested in floral fragrances. Is there anything else you'd like to explore or any other details you want to share?",
+    "isBot": true,
+    "timestamp": "2025-08-06T20:03:40.785Z"
+  },
+  {
+    "content": "tell me more about floral perfumes",
+    "isBot": false,
+    "timestamp": "2025-08-06T20:04:02.946Z"
+  },
+  {
+    "content": "Floral perfumes are beautifully versatile and often feature notes like rose, jasmine, lily, and peony. They can range from light and fresh to rich and romantic, making them perfect for various occasions. Some floral fragrances also blend with other notes like citrus or woody elements to create a unique scent profile. Are you interested in a particular floral note, or would you like a recommendation based on a blend? 🌺",
+    "isBot": true,
+    "timestamp": "2025-08-06T20:04:02.952Z"
+  },
+  {
+    "content": "can you tell me about our previous conversation?",
+    "isBot": false,
+    "timestamp": "2025-08-06T20:04:21.472Z"
+  },
+  {
+    "content": "Sure! In our previous conversation, you asked for a perfume recommendation and mentioned an interest in floral scents. I asked if the perfume was for a specific occasion or everyday wear and inquired about your preferred price range to help narrow down the options. If there's anything else you'd like to discuss or if you have additional preferences, feel free to let me know!",
+    "isBot": true,
+    "timestamp": "2025-08-06T20:04:21.475Z"
+  },
+  {
+    "content": "show me luxury perfumes",
+    "isBot": false,
+    "timestamp": "2025-08-06T20:04:58.576Z"
+  },
+  {
+    "content": "Absolutely, KarjiStore offers a selection of luxury perfumes that are sure to impress. Some popular options include brands like Chanel, Tom Ford, and Dior. These perfumes typically have rich, complex scents and elegant packaging, making them perfect for gifts or special occasions. Do you have a particular brand or scent in mind, or would you like a recommendation based on a specific fragrance note?",
+    "isBot": true,
+    "timestamp": "2025-08-06T20:04:58.583Z"
+  },
+  {
+    "content": "hi",
+    "isBot": false,
+    "timestamp": "2025-08-06T20:21:59.262Z"
+  },
+  {
+    "content": "The OpenRouter account has reached its usage limit. Please check your billing settings.",
+    "isBot": true,
+    "timestamp": "2025-08-06T20:21:59.268Z"
+  }
+]

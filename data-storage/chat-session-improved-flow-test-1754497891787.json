@@ -1,0 +1,52 @@
+[
+  {
+    "content": "hi",
+    "isBot": false,
+    "timestamp": "2025-08-06T16:31:34.954Z"
+  },
+  {
+    "content": "Hello! Welcome to KarjiStore. How can I assist you today? Are you looking for a specific product or need help with something else?",
+    "isBot": true,
+    "timestamp": "2025-08-06T16:31:34.955Z"
+  },
+  {
+    "content": "i want to buy perfumes",
+    "isBot": false,
+    "timestamp": "2025-08-06T16:31:38.185Z"
+  },
+  {
+    "content": "Hello! Welcome to KarjiStore. We're glad to help you find the perfect perfume. What type of scent are you looking for? Do you have a preferred brand or price range?",
+    "isBot": true,
+    "timestamp": "2025-08-06T16:31:38.186Z"
+  },
+  {
+    "content": "floral scent",
+    "isBot": false,
+    "timestamp": "2025-08-06T16:31:41.524Z"
+  },
+  {
+    "content": "That sounds lovely! Floral scents are popular for their romantic and feminine appeal. Do you have a preferred type of floral scent, like rose, jasmine, or something else? Also, are you looking for something light and fresh, or perhaps a more intense and long-lasting fragrance?",
+    "isBot": true,
+    "timestamp": "2025-08-06T16:31:41.525Z"
+  },
+  {
+    "content": "budget around 500 AED",
+    "isBot": false,
+    "timestamp": "2025-08-06T16:31:46.361Z"
+  },
+  {
+    "content": "Great! A budget of 500 AED gives you a lot of options. Do you have a preferred brand or fragrance in mind? Or would you like some recommendations based on your preference for floral scents?",
+    "isBot": true,
+    "timestamp": "2025-08-06T16:31:46.381Z"
+  },
+  {
+    "content": "show me some options",
+    "isBot": false,
+    "timestamp": "2025-08-06T16:31:54.533Z"
+  },
+  {
+    "content": "Absolutely! Given your preference for floral scents and a budget of around 500 AED, here are a few recommendations:\n\n1. **Tom Ford - Black Orchid**\n   - A classic floral scent with notes of orchid, plum, and vanilla.\n   - Price: Around 450 AED\n\n2. **Chanel - Coco Mademoiselle**\n   - A popular choice with a blend of jasmine, rose, and vanilla.\n   - Price: Around 500 AED\n\n3. **Dior - J'adore**\n   - A sweet and romantic scent with notes of peony, rose, and vanilla.\n   - Price: Around 450 AED\n\n4. **Yves Saint Laurent - Black Opium**\n   - A modern and sensual scent with notes of coffee, vanilla, and white flowers.\n   - Price: Around 400 AED\n\n5. **Guerlain - Shalimar**\n   - A timeless classic with notes of vanilla, bergamot, and orange blossom.\n   - Price: Around 500 AED\n\nWould you like more details about any of these options, or do you have a specific preference for a particular brand or scent?",
+    "isBot": true,
+    "timestamp": "2025-08-06T16:31:54.536Z"
+  }
+]

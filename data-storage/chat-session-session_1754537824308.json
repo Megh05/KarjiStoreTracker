@@ -1,0 +1,12 @@
+[
+  {
+    "content": "show me watches",
+    "isBot": false,
+    "timestamp": "2025-08-07T03:37:08.420Z"
+  },
+  {
+    "content": "The OpenRouter API is rate limiting requests. Please try again later.",
+    "isBot": true,
+    "timestamp": "2025-08-07T03:37:08.422Z"
+  }
+]

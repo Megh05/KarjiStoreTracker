@@ -1,0 +1,62 @@
+[
+  {
+    "content": "hi",
+    "isBot": false,
+    "timestamp": "2025-08-06T19:15:18.809Z"
+  },
+  {
+    "content": "Hello there! How can I assist you today? 😊",
+    "isBot": true,
+    "timestamp": "2025-08-06T19:15:18.811Z"
+  },
+  {
+    "content": "I want to buy a perfume",
+    "isBot": false,
+    "timestamp": "2025-08-06T19:15:35.650Z"
+  },
+  {
+    "content": "Great choice! We have a fantastic range of perfumes at KarjiStore. Are you looking for something specific, like a particular brand or scent, or do you need a recommendation? Also, is this for a special occasion or just to treat yourself? 😊",
+    "isBot": true,
+    "timestamp": "2025-08-06T19:15:35.651Z"
+  },
+  {
+    "content": "floral scent",
+    "isBot": false,
+    "timestamp": "2025-08-06T19:15:52.575Z"
+  },
+  {
+    "content": "Floral scents are always a lovely choice! Do you have a preference for a specific brand, or are you open to exploring different options? And what's your budget range so I can suggest something that fits just right? 🌸",
+    "isBot": true,
+    "timestamp": "2025-08-06T19:15:52.578Z"
+  },
+  {
+    "content": "what did I ask you earlier?",
+    "isBot": false,
+    "timestamp": "2025-08-06T19:16:13.963Z"
+  },
+  {
+    "content": "You mentioned that you're interested in buying a perfume with a floral scent. Let me know if there's anything else you'd like to add or if you have any specific preferences! 🌺",
+    "isBot": true,
+    "timestamp": "2025-08-06T19:16:13.964Z"
+  },
+  {
+    "content": "what was my last question?",
+    "isBot": false,
+    "timestamp": "2025-08-06T19:16:42.519Z"
+  },
+  {
+    "content": "Your last question was about what you had asked me earlier. Is there anything else you'd like to know or discuss about floral perfumes? 😊",
+    "isBot": true,
+    "timestamp": "2025-08-06T19:16:42.521Z"
+  },
+  {
+    "content": "what was our conversation about?",
+    "isBot": false,
+    "timestamp": "2025-08-06T19:16:58.748Z"
+  },
+  {
+    "content": "We were discussing your interest in purchasing a perfume with a floral scent. I was trying to understand your preferences, like if you have a specific brand in mind or a budget range, so I can help you find the perfect fragrance. Is there anything specific you'd like to explore further? 🌷",
+    "isBot": true,
+    "timestamp": "2025-08-06T19:16:58.751Z"
+  }
+]

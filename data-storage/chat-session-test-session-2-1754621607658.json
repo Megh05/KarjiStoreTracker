@@ -1,0 +1,12 @@
+[
+  {
+    "content": "I want a luxury watch under 1000 AED",
+    "isBot": false,
+    "timestamp": "2025-08-08T02:53:27.670Z"
+  },
+  {
+    "content": "I'm sorry, I encountered an error while processing your request. Please try again later.",
+    "isBot": true,
+    "timestamp": "2025-08-08T02:53:27.677Z"
+  }
+]

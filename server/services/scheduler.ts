@@ -1,7 +1,7 @@
 import * as cron from 'node-cron';
 import { vectorStorage } from './vector-storage';
 import { contentParser } from './content-parser';
-import { ragService } from './rag-service';
+import { agenticRagService } from './agentic-rag-service';
 
 interface FeedSyncResult {
   success: boolean;
